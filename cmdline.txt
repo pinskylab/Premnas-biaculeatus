@@ -1,7 +1,15 @@
 Genepop
-GenepopInputFile=PRBI_2009-09-07.txt
-MenuOptions=6:2
+GenepopInputFile=prbi_genepop_ibdinput.txt
+MenuOptions=6:6
 EstimationPloidy=Diploid
-RandomSeed=67144630
+IsolationStatistic=default
+Geometry=1D
+CIcoverage=0.95
+testPoint=0
+MinimalDistance=0.0001
+MaximalDistance=1e+09
+MantelPermutations=1000
+MantelRankTest=FALSE
+MantelSeed=67144630
 Mode=Batch
 
