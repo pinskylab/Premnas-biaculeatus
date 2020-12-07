@@ -57,6 +57,7 @@ plot(prbi_geodistance_km, prbi_fst_matrix, ylim=c(-0.25, 0.25),
      xlab="Pairwise Geographic Distance (km)", ylab="Pairwise Fst", 
      main="Pairwise Fst vs. Geographic Distance", pch=20)
 
+
 #IBD analysis using Genepop function
 library(genepop)
 
@@ -65,5 +66,18 @@ library(genepop)
 ibd("prbi_genepop_ibdinput.txt", outputFile="prbi_genepop_ibdanalysis.txt", 
     dataType="Diploid", statistic="F/(1-F)", geographicScale="1D", CIcoverage=0.95,
     testPoint=0, mantelPermutations=1000, verbose = interactive())
+
+
+#Read in Fst and Geographic Distance Matrices
+#These ones only have information below the diagonal
+
+prbi_fst_trimatrix = read.csv("Pairwise Fst Triangle Matrix.csv")
+prbi_geodistance_trimatrix = read.csv("Geographic Distance Triangle Matrix.csv")
+
+#Linearize Fst (Fst/(1-Fst))
+prbi_fstlin = as.matrix(prbi_fst_trimatrix/(1-prbi_fst_trimatrix))
+
+#Plot Linear Fst vs. Geographic Distance
+plot(c(prbi_geodistance_trimatrix), c(prbi_fstlin))
 
 
