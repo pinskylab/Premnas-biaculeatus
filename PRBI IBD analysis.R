@@ -2,12 +2,19 @@
 
 library(genepop)
 
-#Read in data
+##Read in data
 
 prbi_genalex = read.csv("PRBI_GenAlEx_2009-11-12.csv")
 prbi_genepop = read.csv("PRBI_2009-09-07.txt")
 
-#Calculate pairwise Fst between populations
+##Test for Hardy-Weinberg Equilibrium
+
+test_HW("PRBI_2009-09-07.txt", outputFile="prbi_hw.txt")
+
+#HW test results in file "prbi_hw.txt"
+
+
+##Calculate pairwise Fst between populations
 #pairs=TRUE to get a pairwise Fst matrix
 
 Fst("PRBI_2009-09-07.txt", pairs = TRUE, outputFile = "prbi_genepop_fst.txt", 
@@ -15,7 +22,8 @@ Fst("PRBI_2009-09-07.txt", pairs = TRUE, outputFile = "prbi_genepop_fst.txt",
 
 #Resulting Fst matrices found in "prbi_genepop_fst.txt" and "prbi_genepop_fst.txt.MIG" 
 
-#Calculate geographic distances between populations using geodist package
+
+##Calculate geographic distances between populations using geodist package
 
 install.packages("geodist")
 library(geodist)
@@ -33,9 +41,8 @@ prbi_lat <- c(10.22834459, 10.17666235, 9.414770978, 9.616869822,
               10.76495538, 10.9440459, 10.01649883, 10.54725344)
 prbi_lat
 
-
 #Use geodist_vec to calculate pairwise distances
-#Outputs matrix of geodesic distances in meters- labeled as prbi_geodistance
+#Outputs matrix of geodesic distances in meters- labeled as prbi_geodistance_meters
 
 prbi_geodistance_meters <- geodist_vec(prbi_long, prbi_lat, paired=FALSE, sequential=FALSE,
             pad=FALSE, measure="geodesic")
@@ -46,19 +53,19 @@ prbi_geodistance_meters
 prbi_geodistance_km <- prbi_geodistance_meters/1000
 prbi_geodistance_km
 
-#Create a matrix for pairwise Fst
+##Create a matrix for pairwise Fst
 
 prbi_fst = read.csv("Pairwise Fst Matrix.csv")
 prbi_fst_matrix <- as.matrix(prbi_fst)
 
-#Plot pairwise Fst matrix vs. geographic distance matrix
+##Plot pairwise Fst matrix vs. geographic distance matrix
 
 plot(prbi_geodistance_km, prbi_fst_matrix, ylim=c(-0.25, 0.25), 
      xlab="Pairwise Geographic Distance (km)", ylab="Pairwise Fst", 
      main="Pairwise Fst vs. Geographic Distance", pch=20)
 
 
-#IBD analysis using Genepop function
+##IBD analysis using Genepop function
 library(genepop)
 
 #Tried this but R aborted and terminated
@@ -67,6 +74,15 @@ ibd("prbi_genepop_ibdinput.txt", outputFile="prbi_genepop_ibdanalysis.txt",
     dataType="Diploid", statistic="F/(1-F)", geographicScale="1D", CIcoverage=0.95,
     testPoint=0, mantelPermutations=1000, verbose = interactive())
 
+#Trying a version of the ibd function that allows a geo distance matrix
+#Error- unused argument geoDistFile- didn't take it as an input
+ibd("PRBI_2009-09-07.txt", geoDistFile="prbi_genepop_geomatrix.txt", 
+    outputFile="prbi_genepop_ibdanalysis.txt", dataType="Diploid", 
+    statistic="F/(1-F)", geographicScale="1D", CIcoverage=0.95,
+    testPoint=0, mantelPermutations=1000, verbose = interactive())
+
+
+##Linearize Fst and Plot Linear Fst vs. Geographic Distance
 
 #Read in Fst and Geographic Distance Matrices
 #These ones only have information below the diagonal
