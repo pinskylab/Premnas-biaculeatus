@@ -46,6 +46,7 @@ prbi_avglatlong_matrix <- as.matrix(prbi_avglatlong)
 #Getting error- says it can't determine longitude and latitude columns
 prbi_distance_meters <- geodist(prbi_avglatlong, measure="geodesic")
 
+#Use vector version of Geodist instead
 #Create vector for longitude and latitude of populations from prbi_avglatlong
 #Listed in sequential order of populations from pop 1-pop 22
 
@@ -75,31 +76,76 @@ prbi_geodistance_km
 #Remove diagonals/upper triangle of the geographic distance matrix
 prbi_geodistance_km[upper.tri(prbi_geodistance_km, diag=T)] = NA
 
-#Load in Fst matrix
+
+
+##Fst of all populations and all loci
+#Trying different ways of loading in the fst matrix to have less formatting issues
+#None worked so far
+prbi_txt_fst <- read.table("prbi_genepop_fst.txt.MIG", header=T, skip=3, sep="")
+
+library(data.table)
+prbi_txt_fst <- fread("prbi_genepop_fst.txt.MIG")
+
+prbi_txt_fst <- read.table("prbi_genepop_fst.csv", skip=270, sep="")
+
+#Load in Fst matrix and edit formatting to match prbi_geodistance_km
 prbi_fst <- read.csv("prbi_genepop_fst.csv.MIG")
 prbi_fst <- as.matrix(prbi_fst)
 
+#Delete unneeded rows 1, 2, and 14
+prbi_fst <- prbi_fst[c(-1, -2, -14)]
+#still have the issue of only one column holding all the Fst values
+
+#Instead will import a csv file that has the Fst values in appropriate columns
+prbi_fst <- read.csv("Pairwise Fst Matrix.csv")
+prbi_fst <- as.matrix(prbi_fst)
+prbi_fst <- prbi_fst[,-1]
+
+colnames(prbi_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
+rownames(prbi_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
+
 ##Linearize Fst and Plot Linear Fst vs. Geographic Distance
 
-#Read in Fst and Geographic Distance Matrices
-#These ones only have information below the diagonal
-#Need to use as.matrix to move this to matrix form (otherwise geo distance is not in a matrix)
-
-prbi_fst_trimatrix = read.csv("Pairwise Fst Triangle Matrix.csv")
-prbi_geodistance_trimatrix = read.csv("Geographic Distance Triangle Matrix.csv")
-
-
 #Linearize Fst (Fst/(1-Fst))
-prbi_fstlin = as.matrix(prbi_fst_trimatrix/(1-prbi_fst_trimatrix))
+prbi_fstlin = as.matrix(prbi_fst/(1-prbi_fst))
 
 #Plot Linear Fst vs. Geographic Distance
-plot(prbi_geodistance_trimatrix, prbi_fstlin)
+plot(prbi_geodistance_km, prbi_fstlin, ylim=c(-0.25, 0.25), 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="Linearized Fst vs. Geographic Distance", pch=20)
+
+
+##Excluding ACHB9
+
+##Calculate pairwise Fst between populations- using Genepop file excluding ACHB9
+#pairs=TRUE to get a pairwise Fst matrix
+
+Fst("PRBI_2009-09-07_noACH_B9.txt", pairs = TRUE, outputFile = "prbi_genepop_noACHB9_fst.csv", 
+    dataType = "Diploid", verbose = interactive())
+
+#Resulting Fst matrices found in "prbi_genepop_noACHB9_fst.csv" and "prbi_genepop_noACHB9_fst.csv.MIG" 
+
+#Create matrix for Fst excluding ACHB9
+prbi_noACHB9_fst <- read.csv("All Pop No ACHB9 Fst Matrix.csv")
+prbi_noACHB9_fst <- as.matrix(prbi_noACHB9_fst)
+prbi_noACHB9_fst <- prbi_noACHB9_fst[,-1]
+
+colnames(prbi_noACHB9_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
+rownames(prbi_noACHB9_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
+
+##Linearize Fst and Plot Linear Fst vs. Geographic Distance
+
+#Linearize Fst (Fst/(1-Fst))
+prbi_noACHB9_fstlin = as.matrix(prbi_noACHB9_fst/(1-prbi_noACHB9_fst))
+
+#Plot Linear Fst vs. Geographic Distance
+plot(prbi_geodistance_km, prbi_noACHB9_fstlin, 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="All Pop No ACHB9 Linearized Fst vs. Geographic Distance", pch=20)
 
 
 
-
-
-
+##Extra/unused:
 ##Create a matrix for pairwise Fst
 
 prbi_fst = read.csv("Pairwise Fst Matrix.csv")
