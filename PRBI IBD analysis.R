@@ -144,6 +144,83 @@ plot(prbi_geodistance_km, prbi_noACHB9_fstlin,
      main="All Pop No ACHB9 Linearized Fst vs. Geographic Distance", pch=20)
 
 
+##Excluding Population 19
+
+#Create geographic distance matrix that excludes population 19
+
+#Exclude pop 19 from the avg. lat long dataframe
+prbi_no19_avglatlong <- prbi_avglatlong[-c(11),]
+
+#Create vector for longitude and latitude of populations from prbi_no19_avglatlong
+#Listed in sequential order of populations from pop 1-pop 22
+prbi_no19_long <- prbi_no19_avglatlong$longitude
+prbi_no19_long
+
+prbi_no19_lat <- prbi_no19_avglatlong$latitude
+prbi_no19_lat
+
+#Use geodist_vec to calculate pairwise distances
+#Outputs matrix of geodesic distances in meters- labeled as prbi_no19_geodist_meters
+library(geodist)
+
+prbi_no19_geodist_meters <- geodist_vec(prbi_no19_long, prbi_no19_lat, paired=FALSE, sequential=FALSE,
+                                       pad=FALSE, measure="geodesic")
+prbi_no19_geodist_meters 
+
+#Convert geographic distance from meters to kilometers
+
+prbi_no19_geodist_km <- prbi_no19_geodist_meters/1000
+prbi_no19_geodist_km
+
+#Relabel matrix columns and rows to be Populations 1-22
+rownames(prbi_no19_geodist_km) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 22)
+colnames(prbi_no19_geodist_km) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 22)
+prbi_no19_geodist_km
+
+#Remove diagonals/upper triangle of the geographic distance matrix
+prbi_no19_geodist_km[upper.tri(prbi_no19_geodist_km, diag=T)] = NA
+
+
+#Generate Fst matrices excluding population 19 and excluding ACHB9:
+
+##Calculate pairwise Fst between populations- using Genepop file excluding pop 19 and ACHB9
+#pairs=TRUE to get a pairwise Fst matrix
+library(genepop)
+
+Fst("PRBI_2009-09-07_no19_noACH_B9.txt", pairs = TRUE, outputFile = "prbi_genepop_no19_noACHB9_fst.csv", 
+    dataType = "Diploid", verbose = interactive())
+
+#Resulting Fst matrices found in "prbi_genepop_no19_noACHB9_fst.csv" and "prbi_genepop_no19_noACHB9_fst.csv.MIG" 
+
+#Create matrix for Fst excluding ACHB9
+prbi_no19_noACHB9_fst <- read.csv("No 19 No ACHB9 Fst Matrix.csv")
+prbi_no19_noACHB9_fst <- as.matrix(prbi_no19_noACHB9_fst)
+prbi_no19_noACHB9_fst <- prbi_no19_noACHB9_fst[,-1]
+
+colnames(prbi_no19_noACHB9_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 22)
+rownames(prbi_no19_noACHB9_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 22)
+
+##Linearize Fst and Plot Linear Fst vs. Geographic Distance
+
+#Linearize Fst (Fst/(1-Fst))
+prbi_no19_noACHB9_fstlin = as.matrix(prbi_no19_noACHB9_fst/(1-prbi_no19_noACHB9_fst))
+
+#Plot Linear Fst vs. Geographic Distance
+plot(prbi_no19_geodist_km, prbi_no19_noACHB9_fstlin, 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="No Pop 19 No ACHB9 Linearized Fst vs. Geographic Distance", pch=20)
+
+#Faster way to exclude pop 19 from the Fst matrix (delete the row and column where pop 19 data is):
+prbi_no19_noACHB9_trial <- prbi_noACHB9_fstlin[-11, -11]
+
+
+##Excluding population 19 but with all loci:
+prbi_no19_fstlin <- prbi_fstlin[-11, -11]
+
+#Plot Linear Fst vs. Geographic Distance
+plot(prbi_no19_geodist_km, prbi_no19_fstlin, 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="No Pop 19 Linearized Fst vs. Geographic Distance", pch=20)
 
 ##Extra/unused:
 ##Create a matrix for pairwise Fst
