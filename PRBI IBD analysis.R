@@ -114,9 +114,17 @@ plot(prbi_geodistance_km, prbi_fstlin, ylim=c(-0.25, 0.25),
      xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
      main="Linearized Fst vs. Geographic Distance", pch=20)
 
-#Linear model and mantel test
-lm_all = lm(prbi_fstlin~prbi_geodistance_km, na.exclude)
+#Add regression to graph
+library(smatr)
 
+line_all <- line.cis(y=c(prbi_fstlin), x=c(prbi_geodistance_km))
+abline(a=line_all$coef[1], b=line_all$coef[2], col="red", lwd=1)
+
+#Mantel test
+
+library(vegan)
+mantel(prbi_geodistance_km, prbi_fstlin) 
+#r: 0.1563 p: 0.146
 
 ##Excluding ACHB9
 
@@ -145,6 +153,16 @@ prbi_noACHB9_fstlin = as.matrix(prbi_noACHB9_fst/(1-prbi_noACHB9_fst))
 plot(prbi_geodistance_km, prbi_noACHB9_fstlin, 
      xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
      main="All Pop No ACHB9 Linearized Fst vs. Geographic Distance", pch=20)
+
+#Add regression to graph
+
+line_noACHB9 <- line.cis(y=c(prbi_noACHB9_fstlin), x=c(prbi_geodistance_km))
+abline(a=line_noACHB9$coef[1], b=line_noACHB9$coef[2], col="red", lwd=1)
+
+#Mantel test
+
+mantel(prbi_geodistance_km, prbi_noACHB9_fstlin) 
+#r: 0.1546 p: 0.167
 
 
 ##Excluding Population 19
@@ -208,13 +226,23 @@ rownames(prbi_no19_noACHB9_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 22)
 #Linearize Fst (Fst/(1-Fst))
 prbi_no19_noACHB9_fstlin = as.matrix(prbi_no19_noACHB9_fst/(1-prbi_no19_noACHB9_fst))
 
+#Faster way to exclude pop 19 from the Fst matrix (delete the row and column where pop 19 data is):
+prbi_no19_noACHB9_fstlin <- prbi_noACHB9_fstlin[-11, -11]
+
 #Plot Linear Fst vs. Geographic Distance
 plot(prbi_no19_geodist_km, prbi_no19_noACHB9_fstlin, 
      xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
      main="No Pop 19 No ACHB9 Linearized Fst vs. Geographic Distance", pch=20)
 
-#Faster way to exclude pop 19 from the Fst matrix (delete the row and column where pop 19 data is):
-prbi_no19_noACHB9_trial <- prbi_noACHB9_fstlin[-11, -11]
+#Add regression to graph
+
+line_no19_noACHB9 <- line.cis(y=c(prbi_no19_noACHB9_fstlin), x=c(prbi_no19_geodist_km))
+abline(a=line_no19_noACHB9$coef[1], b=line_no19_noACHB9$coef[2], col="red", lwd=1)
+
+#Mantel test
+
+mantel(prbi_no19_geodist_km, prbi_no19_noACHB9_fstlin) 
+#r: 0.09557 p: 0.306
 
 
 ##Excluding population 19 but with all loci:
@@ -225,22 +253,20 @@ plot(prbi_no19_geodist_km, prbi_no19_fstlin,
      xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
      main="No Pop 19 Linearized Fst vs. Geographic Distance", pch=20)
 
+#Add regression to graph
+
+line_no19 <- line.cis(y=c(prbi_no19_fstlin), x=c(prbi_no19_geodist_km))
+abline(a=line_no19$coef[1], b=line_no19$coef[2], col="red", lwd=1)
+
+#Mantel test
+
+mantel(prbi_no19_geodist_km, prbi_no19_fstlin) 
+#r: 0.1158 p: 0.242
+
 
 
 
 ##Extra/unused:
-##Create a matrix for pairwise Fst
-
-prbi_fst = read.csv("Pairwise Fst Matrix.csv")
-prbi_fst_matrix <- as.matrix(prbi_fst)
-
-##Plot pairwise Fst matrix vs. geographic distance matrix
-
-plot(prbi_geodistance_km, prbi_fst_matrix, ylim=c(-0.25, 0.25), 
-     xlab="Pairwise Geographic Distance (km)", ylab="Pairwise Fst", 
-     main="Pairwise Fst vs. Geographic Distance", pch=20)
-
-
 ##IBD analysis using Genepop function
 library(genepop)
 
