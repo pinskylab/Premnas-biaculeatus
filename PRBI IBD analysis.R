@@ -114,6 +114,9 @@ plot(prbi_geodistance_km, prbi_fstlin, ylim=c(-0.25, 0.25),
      xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
      main="Linearized Fst vs. Geographic Distance", pch=20)
 
+#Linear model and mantel test
+lm_all = lm(prbi_fstlin~prbi_geodistance_km, na.exclude)
+
 
 ##Excluding ACHB9
 
@@ -221,6 +224,9 @@ prbi_no19_fstlin <- prbi_fstlin[-11, -11]
 plot(prbi_no19_geodist_km, prbi_no19_fstlin, 
      xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
      main="No Pop 19 Linearized Fst vs. Geographic Distance", pch=20)
+
+
+
 
 ##Extra/unused:
 ##Create a matrix for pairwise Fst
