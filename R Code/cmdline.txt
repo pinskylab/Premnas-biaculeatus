@@ -1,5 +1,5 @@
 Genepop
-GenepopInputFile=PRBI_2009-09-07_no19_noACH_B9.txt
+GenepopInputFile=PRBI_genepop_2009-11-12.gen.txt
 MenuOptions=6:2
 EstimationPloidy=Diploid
 RandomSeed=67144630

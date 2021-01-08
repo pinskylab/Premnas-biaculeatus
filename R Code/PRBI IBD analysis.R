@@ -265,6 +265,67 @@ mantel(prbi_no19_geodist_km, prbi_no19_fstlin)
 
 
 
+##Trial with a different Genepop input file found on GitHub:
+#File "PRBI_genepop_2009-11-12.gen"
+
+##Calculate pairwise Fst between populations
+#pairs=TRUE to get a pairwise Fst matrix
+
+Fst("PRBI_genepop_2009-11-12.gen.txt", pairs = TRUE, outputFile = "prbi_genepop_2009-11-12_fst.csv", 
+    dataType = "Diploid", verbose = interactive())
+
+#Results in prbi_genepop_2009-11-12_fst.csv and prbi_genepop_2009-11-12_fst.csv.MIG
+
+#Generate Fst matrix
+prbi_11_12_fst <- read.csv("2009-11-12 All Pop All Loci.csv")
+prbi_11_12_fst <- as.matrix(prbi_11_12_fst)
+prbi_11_12_fst <- prbi_11_12_fst[,-1]
+
+colnames(prbi_11_12_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
+rownames(prbi_11_12_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
+
+##Linearize Fst and Plot Linear Fst vs. Geographic Distance
+
+#Linearize Fst (Fst/(1-Fst))
+prbi_11_12_fstlin = as.matrix(prbi_11_12_fst/(1-prbi_11_12_fst))
+
+#Plot Linear Fst vs. Geographic Distance
+plot(prbi_geodistance_km, prbi_11_12_fstlin,
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="2009-11-12 Linearized Fst vs. Geographic Distance", pch=20)
+
+#Add regression to graph
+library(smatr)
+
+line_11_12_all <- line.cis(y=c(prbi_11_12_fstlin), x=c(prbi_geodistance_km))
+abline(a=line_11_12_all$coef[1], b=line_11_12_all$coef[2], col="red", lwd=1)
+
+#Mantel test
+
+library(vegan)
+mantel(prbi_geodistance_km, prbi_11_12_fstlin) 
+#r: 0.189 p: 0.11
+
+
+#2009-11-12 data without population 19:
+
+prbi_no19_11_12_fstlin <- prbi_11_12_fstlin[-11, -11]
+
+plot(prbi_no19_geodist_km, prbi_no19_11_12_fstlin, 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="2009-11-12 No Pop 19 Linearized Fst vs. Geographic Distance", pch=20)
+
+#Add regression to graph
+line_no19_11_12 <- line.cis(y=c(prbi_no19_11_12_fstlin), x=c(prbi_no19_geodist_km))
+abline(a=line_no19_11_12$coef[1], b=line_no19_11_12$coef[2], col="red", lwd=1)
+
+#Mantel test
+
+mantel(prbi_no19_geodist_km, prbi_no19_11_12_fstlin) 
+#r: 0.1461 p: 0.207
+
+
+
 
 ##Extra/unused:
 ##IBD analysis using Genepop function
