@@ -325,6 +325,56 @@ mantel(prbi_no19_geodist_km, prbi_no19_11_12_fstlin)
 #r: 0.1461 p: 0.207
 
 
+#2009-11-12 data without populations 13, 14, 15, 22 (East-West transect)
+
+
+
+
+
+#2009-11-12 data without populations 13, 14, 15, 19, 22 (East-West transect wout 19)
+
+
+
+
+#Mapping the populations
+library(maps)
+library(mapdata)
+#Pull up map of Cebu and Leyte
+map(database="world", xlim=c(123, 126), ylim=c(9, 11.5), col="gray", fill=TRUE)
+#Add points to the map, representing each population
+points(prbi_avglatlong$longitude, prbi_avglatlong$latitude, pch=19, col=1:12)
+legend("right", legend=c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22), fill=1:12, col=1:12)
+
+#ggmap requires a google api key
+register_google(key="")
+library(ggmap)
+prbi_map <- get_map(location=c(lon=124, lat=10))
+
+
+
+##Trialing different Genepop Fst function inputs
+
+#Trial 1
+#pairs=TRUE, the rest are the defaults
+
+Fst("PRBI_genepop_2009-11-12.gen.txt", pairs = TRUE, outputFile = "prbi_genepop_2009-11-12_fst.csv", 
+    dataType = "Diploid", verbose = interactive())
+
+#Results in prbi_genepop_2009-11-12_fst.csv and prbi_genepop_2009-11-12_fst.csv.MIG
+#Matches "PRBI_11_12_fsts.csv" from GitHub
+
+#Trial 2- all defaults
+
+Fst("PRBI_genepop_2009-11-12.gen.txt",outputFile = "prbi_genepop_defaults_fst.csv")
+
+#With all defaults, it does not generate pairwise matrices
+
+#Trial 3- pairs=TRUE and sizes=TRUE
+
+Fst("PRBI_genepop_2009-11-12.gen.txt", sizes=TRUE, pairs = TRUE, outputFile = "prbi_genepop_sizestrue_fst.csv")
+#Does not match "PRBI_11_12_fsts.csv" from GitHub
+
+
 
 
 ##Extra/unused:
