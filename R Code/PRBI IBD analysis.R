@@ -327,12 +327,42 @@ mantel(prbi_no19_geodist_km, prbi_no19_11_12_fstlin)
 
 #2009-11-12 data without populations 13, 14, 15, 22 (East-West transect)
 
+prbi_11_12_EW_fstlin <- prbi_11_12_fstlin[c(-8, -9, -10, -12), c(-8, -9, -10, -12)]
 
+prbi_EW_geodist_km <- prbi_geodistance_km[c(-8, -9, -10, -12), c(-8, -9, -10, -12)]
 
+plot(prbi_EW_geodist_km, prbi_11_12_EW_fstlin, 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="2009-11-12 No Pops 13-15, 22 Linearized Fst vs. Geographic Distance", pch=20)
+
+#Add regression to graph
+line_11_12_EW <- line.cis(y=c(prbi_11_12_EW_fstlin), x=c(prbi_EW_geodist_km))
+abline(a=line_11_12_EW$coef[1], b=line_11_12_EW$coef[2], col="red", lwd=1)
+
+#Mantel test
+
+mantel(prbi_EW_geodist_km, prbi_11_12_EW_fstlin) 
+#r: 0.1604 p: 0.235
 
 
 #2009-11-12 data without populations 13, 14, 15, 19, 22 (East-West transect wout 19)
 
+prbi_11_12_EW_no19_fstlin <- prbi_11_12_EW_fstlin[-8, -8]
+
+prbi_EW_no19_geodist_km <- prbi_EW_geodist_km[-8, -8]
+
+plot(prbi_EW_no19_geodist_km, prbi_11_12_EW_no19_fstlin, 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="2009-11-12 No Pops 13-15, 19, 22 Linearized Fst vs. Geographic Distance", pch=20)
+
+#Add regression to graph
+line_11_12_EW_no19 <- line.cis(y=c(prbi_11_12_EW_no19_fstlin), x=c(prbi_EW_no19_geodist_km))
+abline(a=line_11_12_EW_no19$coef[1], b=line_11_12_EW_no19$coef[2], col="red", lwd=1)
+
+#Mantel test
+
+mantel(prbi_EW_no19_geodist_km, prbi_11_12_EW_no19_fstlin) 
+#r: 0.4951 p: 0.02
 
 
 
