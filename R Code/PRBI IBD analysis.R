@@ -355,9 +355,34 @@ plot(prbi_EW_no19_geodist_km, prbi_11_12_EW_no19_fstlin,
      xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
      main="2009-11-12 No Pops 13-15, 19, 22 Linearized Fst vs. Geographic Distance", pch=20)
 
-#Add regression to graph
+#Add SMA regression to graph
 line_11_12_EW_no19 <- line.cis(y=c(prbi_11_12_EW_no19_fstlin), x=c(prbi_EW_no19_geodist_km))
 abline(a=line_11_12_EW_no19$coef[1], b=line_11_12_EW_no19$coef[2], col="red", lwd=1)
+
+#Run linear regression
+y <- as.numeric(prbi_11_12_EW_no19_fstlin)
+x <- as.numeric(prbi_EW_no19_geodist_km)
+y
+x
+class(y)
+class(x)
+
+mod_EW_no19 <- lm(y~x)
+summary(mod_EW_no19)
+#Intercept: Estimate= -2.272e-03, Std. Error= 1.866e-03, t value= -1.218, p value= 0.2383
+#x Estimate= 6.253e-05, Std. Error 2.518e-05, t value=2.484, p-value=0.0225
+
+#Multiple R-squared= 0.2451, Adjusted R-squared= 0.2054, F-Statistic=6.168 on 1 and 19 DF,
+#p-value=0.0225
+
+coef(mod_EW_no19)
+confint(mod_EW_no19)
+
+#Add linear regression to plot
+plot(prbi_EW_no19_geodist_km, prbi_11_12_EW_no19_fstlin, 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="2009-11-12 No Pops 13-15, 19, 22 Linearized Fst vs. Geographic Distance", pch=20)
+abline(mod_EW_no19, col="red")
 
 #Mantel test
 
