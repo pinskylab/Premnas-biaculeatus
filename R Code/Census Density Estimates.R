@@ -72,63 +72,129 @@ mean(surv$densPRBI[k]*1000) #(=0.2969 fish/km2)
 k = surv$RandomSite == 1
 
 #Density of adults using counts/area
-(sum(surv$countPRBIad[k]))/(sum(surv$area[k]/1000)) #(=0.1404 adults/km2)
+(sum(surv$countPRBIad[k]))/(sum(surv$area[k]/1000)) #(=0.1259 adults/km2)
 
 #Using dens column of data sheet
-mean(surv$densPRBIad[k]*1000) #(=0.1137 adults/km2)
+mean(surv$densPRBIad[k]*1000) #(=0.1289 adults/km2)
 
 ##Adults at random sites in Cebu
 k = surv$Region == "Cebu" & surv$RandomSite == 1
 
 #Density using counts/area
-(sum(surv$countPRBIad[k]))/(sum(surv$area[k]/1000)) #(=0.1017 fish/km2)
+(sum(surv$countPRBIad[k]))/(sum(surv$area[k]/1000)) #(=0.1017 adults/km2)
 
 #Density counts using dens column
-mean(surv$densPRBIad[k]*1000) #(=0.09795 fish/km2)
+mean(surv$densPRBIad[k]*1000) #(=0.09795 adults/km2)
 
 ##Adults at random sites in Leyte
 k = surv$Region == "Leyte" & surv$RandomSite == 1
 
 #Density using counts/area
-(sum(surv$countPRBIad[k]))/(sum(surv$area[k]/1000)) #(=0.1901 fish/km2)
+(sum(surv$countPRBIad[k]))/(sum(surv$area[k]/1000)) #(=0.1901 adults/km2)
 
 #Density counts using dens column
-mean(surv$densPRBIad[k]*1000) #(=0.18796 fish/km2)
+mean(surv$densPRBIad[k]*1000) #(=0.18796 adults/km2)
 
 ##Adults at random sites in Danajon
 k = surv$Region == "Danajon" & surv$RandomSite == 1
 
 #Density using counts/area
-(sum(surv$countPRBIad[k]))/(sum(surv$area[k]/1000)) #(=0.1404 fish/km2)
+(sum(surv$countPRBIad[k]))/(sum(surv$area[k]/1000)) #(=0.1404 adults/km2)
 
 #Density counts using dens column
-mean(surv$densPRBIad[k]*1000) #(=0.1137 fish/km2) 
+mean(surv$densPRBIad[k]*1000) #(=0.1137 adults/km2) 
+
+##################################################################
+
+#Checking if each random site has an area value associated with it:
+surv_random <- select(surv, RandomSite, area)
+surv_random <- filter(surv_random, RandomSite != 0)
+surv_random  #Yes, for RandomSite = 1 there is an area at each site
+
+#What about non-random sites?
+surv_nonrandom <- select(surv, RandomSite, LinearFishSurvey, MappingFishSurvey, area)
+surv_nonrandom <- filter(surv_nonrandom, RandomSite == 0)
+#Points with NA for area, have a 0 under RandomSite, Linear FishSurvey, and MappingFishSurvey
+
+#Subset data and filter out the NAs (where there wasn't a survey)
+surv_subset <- select(surv, RandomSite, LinearFishSurvey, MappingFishSurvey, Region, length, area, 
+                      countPRBI, countPRBIad, densPRBI, densPRBIad)
+surv_subset <- filter(surv_subset, area != "NA")
 
 
-##Random sites: Fish/km for PRBI, by latitude, assuming 150m wide reef
+#####################################################################
 
-par(mfrow=c(1,3))
-par(cex=.7, cex.lab = 1.4)
-ylims = c(0, 400)
+##Density estimates for all surveys (LinearFishSurvey, MappingFishSurvey, and RandomSites)
 
-#Cebu
-k = surv$Region == "Cebu" & surv$RandomSite == 1
-plot(surv$lat[k], surv$densPRBI[k]*150*1000, main = "P. biaculeatus in Cebu\n(random sites, 150m reef)", 
-     xlab = "Latitude (°)", ylab = "fish per km", ylim= ylims)
-abline(h = mean(surv$densPRBI[k]*150*1000), lty=3)
-printMeanSE(surv$densPRBI[k]*150*1000)
+##All regions
 
-#Leyte
-k = surv$Region == "Leyte" & surv$RandomSite == 1
-plot(surv$lat[k], surv$densPRBI[k]*150*1000, main = "P. biaculeatus in Leyte\n(random sites, 150m reef)", 
-     xlab = "Latitude (°)", ylab = "fish per km", ylim= ylims)
-abline(h = mean(surv$densPRBI[k]*150*1000), lty=3)
-printMeanSE(surv$densPRBI[k]*150*1000)
+#Density (fish/km2) of all life stages of PRBI using counts/area
+(sum(surv_subset$countPRBI))/(sum(surv_subset$area/1000)) #(=0.4125 fish/km2)
 
-#Danajon
-k = surv$Region == "Danajon" & surv$RandomSite == 1
-plot(surv$lat[k], surv$densPRBI[k]*150*1000, 
-     main = "P. biaculeatus on Danajon Bank\n(random sites, 150m reef)", 
-     xlab = "Latitude (°)", ylab = "fish per km", ylim= ylims)
-abline(h = mean(surv$densPRBI[k]*150*1000), lty=3)
-printMeanSE(surv$densPRBI[k]*150*1000)
+#Using dens column of data sheet
+mean(surv_subset$densPRBI*1000) #(=0.9426 fish/km2)
+
+##Cebu
+k= surv_subset$Region == "Cebu"
+
+#Density using counts/area
+(sum(surv_subset$countPRBI[k]))/(sum(surv_subset$area[k]/1000)) #(=0.3453 fish/km2)
+
+#Density counts using dens column
+mean(surv_subset$densPRBI[k]*1000) #(=0.5304 fish/km2)
+
+##Random sites in Leyte
+k = surv_subset$Region == "Leyte" 
+
+#Density using counts/area
+(sum(surv_subset$countPRBI[k]))/(sum(surv_subset$area[k]/1000)) #(=0.2598 fish/km2)
+
+#Density counts using dens column
+mean(surv_subset$densPRBI[k]*1000) #(=0.9152 fish/km2)
+
+##Random sites in Danajon
+k = surv_subset$Region == "Danajon" 
+
+#Density using counts/area
+(sum(surv_subset$countPRBI[k]))/(sum(surv_subset$area[k]/1000)) #(=1.48 fish/km2)
+
+#Density counts using dens column
+mean(surv_subset$densPRBI[k]*1000) #(=3.96 fish/km2)
+
+#################################################################################
+##Density estimates for adults in all surveys (LinearFishSurvey, MappingFishSurvey, and RandomSites)
+
+##All regions
+
+#Density (fish/km2) of all life stages of PRBI using counts/area
+(sum(surv_subset$countPRBIad))/(sum(surv_subset$area/1000)) #(=0.2510 adults/km2)
+
+#Using dens column of data sheet
+mean(surv_subset$densPRBIad*1000) #(=0.6098 adults/km2)
+
+##Cebu
+k= surv_subset$Region == "Cebu"
+
+#Density using counts/area
+(sum(surv_subset$countPRBIad[k]))/(sum(surv_subset$area[k]/1000)) #(=0.1871 adults/km2)
+
+#Density counts using dens column
+mean(surv_subset$densPRBIad[k]*1000) #(=0.2978 adults/km2)
+
+##Random sites in Leyte
+k = surv_subset$Region == "Leyte" 
+
+#Density using counts/area
+(sum(surv_subset$countPRBIad[k]))/(sum(surv_subset$area[k]/1000)) #(=0.1685 adults/km2)
+
+#Density counts using dens column
+mean(surv_subset$densPRBIad[k]*1000) #(=0.6026 adults/km2)
+
+##Random sites in Danajon
+k = surv_subset$Region == "Danajon" 
+
+#Density using counts/area
+(sum(surv_subset$countPRBIad[k]))/(sum(surv_subset$area[k]/1000)) #(=1.03 adults/km2)
+
+#Density counts using dens column
+mean(surv_subset$densPRBIad[k]*1000) #(=2.83 adults/km2)
