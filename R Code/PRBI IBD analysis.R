@@ -390,6 +390,42 @@ mantel(prbi_EW_no19_geodist_km, prbi_11_12_EW_no19_fstlin)
 #r: 0.4951 p: 0.02
 
 
+#Plot Lin Fst vs. Log Geographic Distance
+
+plot(log(prbi_EW_no19_geodist_km), prbi_11_12_EW_no19_fstlin, 
+     xlab="Natural Log of Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="2009-11-12 No Pops 13-15, 19, 22 Linearized Fst vs. Log of Geographic Distance", pch=20)
+
+#Run linear regression
+y <- as.numeric(prbi_11_12_EW_no19_fstlin)
+xlog <- as.numeric(log(prbi_EW_no19_geodist_km))
+y
+xlog
+class(y)
+class(xlog)
+
+mod_EW_no19_log <- lm(y~xlog)
+summary(mod_EW_no19_log)
+#Intercept: Estimate= -0.009870, Std. Error= 0.005673, t value= -1.74, p value= 0.0980
+#xlog Estimate= 0.002917, Std. Error 0.001395, t value=2.09, p-value=0.0503
+
+#Multiple R-squared= 0.187, Adjusted R-squared= 0.1442, F-Statistic=4.37 on 1 and 19 DF,
+#p-value=0.05026
+
+coef(mod_EW_no19_log)
+confint(mod_EW_no19_log)
+
+#Add linear regression to plot
+plot(log(prbi_EW_no19_geodist_km), prbi_11_12_EW_no19_fstlin, 
+     xlab="Natural Log of Geographic Distance (km)", ylab="Fst/(1-Fst)", 
+     main="2009-11-12 No Pops 13-15, 19, 22 Linearized Fst vs. Log of Geographic Distance", pch=20)
+abline(mod_EW_no19_log, col="red")
+
+#Mantel test
+
+mantel(log(prbi_EW_no19_geodist_km), prbi_11_12_EW_no19_fstlin) 
+#r: 0.4324 p: 0.011
+
 
 #Mapping the populations
 library(maps)
