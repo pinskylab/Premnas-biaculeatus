@@ -55,9 +55,9 @@ disp_cen_lin <- sqrt(1/(4*de_cen_lin*m))  #11.054 km
 
 #Dividing census sum of fish counts by length of reef
 
-#28 fish counted at random sites
+#28 fish counted at random sites- scale this up based on 
 
-de_cen_length <- 28/130  #0.215 fish/km
+de_cen_length <- 75/130  #0.5769 fish/km
 
-disp_cen_length <- sqrt(1/(4*de_cen_length*m)) #136.24km
+disp_cen_length <- sqrt(1/(4*de_cen_length*m)) #83.25km
 
