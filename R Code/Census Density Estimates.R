@@ -31,6 +31,9 @@ sum(surv$area[k])/1000 #total area in km2 (=111.2404 km2)
 ##All random sites
 k = surv$RandomSite == 1
 
+#Sum of survey counts at all random sites
+sum(surv$countPRBI[k])  #28 fish
+
 #Density (fish/km2) of all life stages of PRBI at all random sites using counts/area
 (sum(surv$countPRBI[k]))/(sum(surv$area[k]/1000)) #(=0.2517 fish/km2)
 
