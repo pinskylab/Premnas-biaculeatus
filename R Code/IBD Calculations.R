@@ -63,3 +63,5 @@ de_cen_length <- 75/130  #0.5769 fish/km
 
 disp_cen_length <- sqrt(1/(4*de_cen_length*m)) #83.25km
 
+
+

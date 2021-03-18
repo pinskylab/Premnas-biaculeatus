@@ -44,3 +44,64 @@ s4 <- sigmaFrom_m(De=D4$De, Des=D4$Des, m=m, mse=mse, dims=1)
 s4$sigma_point
 summarizeSigmas(sigmas=s4$sigmas, sg=3)
 
+
+###########################################################
+
+#Estimating adult lifespan (AL) and age at maturity (alpha)
+
+#Using FishLife package
+
+library(devtools)
+devtools::install_github("james-thorson/FishLife")
+library(FishLife)
+
+vignette("tutorial", "FishLife")
+
+#Description of life history parameters in FishLife model:
+#Lmax- maximum length
+#Linf (looks like Loo on graph)- asymptotic maximum length
+#Winfinity- asymptotic maximum mass
+#K- Brody growth coefficient
+#Lmat- length at maturity (Lm in R package?)
+#Amat- age at 50% sexual maturity, in years (tm in R package?)
+#Amax- maximum age, in years (tmax in R package?)
+#M- instantaneous natural mortality rate
+#Temp- average environmental temperature (degrees Celsius)
+#t0- age at which length would be zero according to estimated von Bertalanffy growth curve
+
+#Adult lifespan (AL) = Amax
+#Age at maturity (alpha) = Amat
+
+#Generate basic plot for Premnas biaculeatus
+
+Predict = Plot_taxa(Search_species(Genus="Premnas",Species="biaculeatus")$match_taxonomy, mfrow=c(2,2))
+#Not generating plots correctly
+
+#Predict means for life history parameters (in log-space except for temperature)
+knitr::kable(Predict[[1]]$Mean_pred, digits=3)
+
+#Convert to predictive median by exponentiating the variables:
+knitr::kable(c(exp(Predict[[1]]$Mean_pred[-8]),Predict[[1]]$Mean_pred['Temperature']), digits=3)
+#tmax is 5.598, tm is 1.297
+
+#Calculate predictive mean by exponentiating and bias-correcting:
+knitr::kable(c(exp(Predict[[1]]$Mean_pred[-8]+0.5*diag(Predict[[1]]$Cov_pred)[-8]),Predict[[1]]$Mean_pred['Temperature']), digits=3)
+#tmax is 7.052, tm is 1.678
+
+################################################################
+#Correcting Ne estimate for overlapping generations
+
+#1st use Nb/Ne = 0.485 + 0.758*log(AL/alpha)
+
+Nb_Ne <- 0.485 + (0.758 * log10(7.052/1.678))
+Nb_Ne  #0.958
+
+#2nd calculate adjusted Nb using Nbadj = Nb / (1.26 - 0.323*(Nb/Ne))
+Nb <- 6942.1
+Nb_adj <- Nb / (1.26 - 0.323 * Nb_Ne)
+Nb_adj  #7302.201
+
+#3rd calculate Ne using Ne=Nbadj / Nb/Ne
+
+Ne <- Nb_adj / Nb_Ne
+Ne #7625.296
