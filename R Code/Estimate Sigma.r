@@ -10,9 +10,9 @@ source('sigmaFrom_NbWright.r')
 source('summarizeSigmas.R')
 
 # Set parameters
-niter <- 1 # number of iterations
-alpha <- 1.5 # minimum age of maturity (for Waples Nb to Ne calculations)
-AL <- 10 # adult lifespan (for Waples Nb to Ne calculations)
+niter <- 1000000 # number of iterations
+alpha <- 1.678 # minimum age of maturity (for Waples Nb to Ne calculations)
+AL <- 7.052 # adult lifespan (for Waples Nb to Ne calculations)
 A <- 130 # length of reef (km)
 m <- 6.253e-05 # isolation by distance slope (genetic distance/km)
 mse <- 2.518e-05 # standard error on m
@@ -24,8 +24,9 @@ mse <- 2.518e-05 # standard error on m
 	# Waples_Nb value and JackKnife CI from NeEstimator results (based on lowest allele frequency of 0.02)
 D1 <- DeFromNb(niter, AL, alpha, Waples_Nb=6942.1, Waples_Nbl95=779.5, Waples_Nbu95=10000, A=130) # estimate De
 s1 <- sigmaFrom_m(De=D1$De, Des=D1$Des, m=m, mse=mse, dims=1) # estimate sigma
-s1$sigma_point # report point value for sigma
+s1$sigma_point # report point value for sigma (8.2577)
 summarizeSigmas(sigmas=s1$sigmas, sg=3) # report distribution for sigma
+#Mean- 9.01, median- 8.23, SD- 6.11, Lower 95% CI- 5.48, Upper 95% CI- 16.8
 
 	# Using Waples Nb and Migraine estimate of Wright's neighborhood size
 s2 <- sigmaFrom_NbWright(De=D1$De, Des=D1$Des, NbWright=7738, NbWright_l95=6806, NbWright_u95=10527, dims=1)

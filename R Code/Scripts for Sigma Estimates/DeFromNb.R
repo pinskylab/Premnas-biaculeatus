@@ -11,7 +11,6 @@
 
 
 DeFromNb <- function(niter, AL, alpha, Waples_Nb, Waples_Nbl95, Waples_Nbu95, A){
-	source('findChiSqCIs.R') # find paramaters for a chi-sq distribution, given the 95% CIs
 
 	# Fit the Waples et al. model to relate log10(AL/alpha) to the Nb/Ne ratio
 	dat = read.csv('AllSpecies4_trim.csv') # data from Waples et al. 2013 PRSB
@@ -29,7 +28,7 @@ DeFromNb <- function(niter, AL, alpha, Waples_Nb, Waples_Nbl95, Waples_Nbu95, A)
 	De <- Waples_Ne_adj/A # the point estimate for De
 
 	# generate samples from Nb
-	a2 <- findChiSqCIs(Waples_Nb, Waples_Nbl95, Waples_Nbu95, verbose=FALSE) # find the degrees of freedom for a chi-squared distribution that fits our upper and lower 95% CI values
+	a2 <- 129  # find the degrees of freedom for a chi-squared distribution using df=n-1
 	WaplesNbs = a2*Waples_Nb/rchisq(niter, df=a2) # generate Nb values from chisq distribution (unadjusted Nb)
 
 	# optional debugging to check fitting of the chi-squared distribution
