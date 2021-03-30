@@ -1,12 +1,24 @@
-findChiSqCIs <- function(De, Del95, Deu95, verbose = FALSE){
-	a2 = 105
-	a1 = 100
-	while (abs(mean(as.numeric(a1))-a2) > 1){ # inefficient search for a df that fits my CIs
-		if(mean(as.numeric(a1)) > a2) a2 = a2 - 1
-		if(mean(as.numeric(a1)) < a2) a2 = a2 + 1
-		a1 = c(Del95, Deu95)*qchisq(c(0.975, 0.025), df=a2)/De
-		if(verbose) print(paste(paste(round(mean(as.numeric(a1)),2), collapse=','), a2))
-	}
-	return(a2)
 
+
+cis = data.frame(i=1:500, lower=NA)
+cis$lower[i]=De*i/qchisq(0.025, df=i)
+  
+for(i in 1:500) {
+  cis=c(De*i/qchisq(0.025, df=i))  #Need to add df= otherwise get an error message
+  print(cis)
 }
+
+#df=3 is 815.1128, seems closest to lower CI of 779 from Ne estimator
+#df=4 is 484.1474
+
+for(i in 1:500) {
+  cis=c(De*i/qchisq(0.025, df=i))
+}
+
+cis 
+
+#When I try to append the cis to the data frame, it only prints the value for i=500  
+#print(cis) gives me everything, but doesn't list the i next to it
+cis_df <- data.frame(i=1:500, lower=cis)
+cis_df
+

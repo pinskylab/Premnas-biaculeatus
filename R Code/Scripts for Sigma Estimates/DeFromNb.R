@@ -28,7 +28,7 @@ DeFromNb <- function(niter, AL, alpha, Waples_Nb, Waples_Nbl95, Waples_Nbu95, A)
 	De <- Waples_Ne_adj/A # the point estimate for De
 
 	# generate samples from Nb
-	a2 <- 129  # find the degrees of freedom for a chi-squared distribution using df=n-1
+	a2 <- 3 # find the degrees of freedom for a chi-squared distribution using for loop in findChiSqCIs.R script
 	WaplesNbs = a2*Waples_Nb/rchisq(niter, df=a2) # generate Nb values from chisq distribution (unadjusted Nb)
 
 	# optional debugging to check fitting of the chi-squared distribution
