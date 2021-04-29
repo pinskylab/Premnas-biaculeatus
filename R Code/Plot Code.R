@@ -45,9 +45,53 @@ ggplot(data=augmented_mod_distanceframe, aes(x=distanceframe$GeographicDistance,
 ggplot(data=distanceframe, aes(x=GeographicDistance, y=GeneticDistance)) +
   geom_point()
 
+#Plot showing populations vs. pop 19
+
+pop19 <- tibble(GeographicDistance = as.vector(prbi_EW_geodist_km[8,]),
+                GeneticDistance = as.vector(prbi_11_12_EW_fstlin[8,]))
+pop19 <- drop_na(pop19)
+
+ggplot(data=augmented_mod_distanceframe, aes(x=distanceframe$GeographicDistance, 
+                                             y=distanceframe$GeneticDistance)) +
+  geom_point(size=1.75) +
+  geom_point(data=pop19, aes(x=GeographicDistance, y=GeneticDistance), color="red", size=1.75) +
+  geom_smooth(method="lm", se=FALSE) +
+  theme_bw() +
+  xlab("Geographic Distance (km)") +
+  ylab("Genetic Distance (Fst/(1-Fst)")
 
 #Data Tables
 
 Ne_sigmaestimate <- data.frame(Metric=c("Slope", "Ne", "Reef Length", "De", "Sigma Estimate"),
                           Value=c(6.253e-05, 6942, 130, 53.4, 8.653))
 Ne_sigmaestimate
+
+
+
+##Plot for comparing dispersal distances across coral reef fish species##
+
+#Load in data
+
+fish_dispersal <- read_csv("Fish_DispersalDistances.csv")
+fish_dispersal <- rename(fish_dispersal, Dispersal_Distance = "Dispersal Distance (km)")
+fish_dispersal$Species[7] <- "P. maculatus"
+
+ggplot(fish_dispersal, aes(x=Species, y=Dispersal_Distance)) +
+  geom_point( color=Species, size=4, alpha=0.6)
+
+fish_dispersal %>%
+  mutate(Species = fct_relevel(Species, 
+                               "P. leopardus", "P. maculatus", "C. vagabundus", "A. percula", "P. areolatus", 
+                               "A. clarkii", "P. biaculeatus","E. lori")) %>%
+ggplot(aes(x=Species, y=Dispersal_Distance)) +
+  geom_segment( aes(x=Species, xend=Species, y=0, yend=Dispersal_Distance, color=Species), size=2) +
+  geom_point(aes(color=Species), size=4, alpha=0.6) +
+  theme_light() +
+  coord_flip() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.position="none"
+  ) +
+  ylab("Dispersal Distance (km)")

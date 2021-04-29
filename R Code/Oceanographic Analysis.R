@@ -62,7 +62,7 @@ summary(mod_EW_ocean)
 #Plot data
 plot(ocean_matrix, prbi_11_12_EW_full_fstlin, 
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
-     main="EW Linearized Fst vs. Oceanographic Distance", pch=20)
+      pch=20)
 abline(mod_EW_ocean, col="red")
 
 
