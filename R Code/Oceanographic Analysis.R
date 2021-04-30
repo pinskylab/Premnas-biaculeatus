@@ -65,6 +65,30 @@ plot(ocean_matrix, prbi_11_12_EW_full_fstlin,
       pch=20)
 abline(mod_EW_ocean, col="red")
 
+#Run Mantel test with lower triangle of oceanographic matrix
+lower_ocean_matrix <- read.csv("Oceanographic_Matrix.csv")
+lower_ocean_matrix <- as.matrix(lower_ocean_matrix)
+lower_ocean_matrix <- lower_ocean_matrix[, -1]
+colnames(lower_ocean_matrix) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+rownames(lower_ocean_matrix) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+lower_ocean_matrix[upper.tri(lower_ocean_matrix, diag=T)] = NA
+
+mantel(lower_ocean_matrix, prbi_11_12_EW_fstlin)
+# r: -0.4342, p:0.984
+#Mantel statistic based on Pearson's product-moment correlation, 999 permutations, free permutation
+
+#Run Mantel test with upper triangle of oceanographic matrix
+#This code looks a little counter-intuitive because the mantel function takes the values from the lower triangle of a square
+#matrix, so I need to move the dispersal probabilities from the upper triangle of the ocean_matrix to the lower triangle
+
+upper_ocean_matrix <- as.matrix(ocean_matrix)
+upper_ocean_matrix[lower.tri(upper_ocean_matrix, diag=T)] = NA
+lowerTriangle(upper_ocean_matrix) <- upperTriangle(upper_ocean_matrix, byrow=TRUE)
+upper_ocean_matrix[upper.tri(upper_ocean_matrix, diag=T)] = NA
+
+mantel(upper_ocean_matrix, prbi_11_12_EW_fstlin)
+# r:0.2851, p:0.085
+#Mantel statistic based on Pearson's product-moment correlation, 999 permutations, free permutation
 
 ##Run partial Mantel test of oceanographic distance vs. genetic distance, while controlling for geographic distance
 
@@ -80,8 +104,12 @@ rownames(water_distance) <- c(1, 2, 7, 8, 9, 10, 11, 19)
 upperTriangle(water_distance) <- lowerTriangle(water_distance, byrow=TRUE)
 
 #Partial Mantel test controlling for over water geographic distance
-
+#This is based on the lower triangle of the ocean matrix
 mantel.partial(ocean_matrix, prbi_11_12_EW_full_fstlin, water_distance)
-#Mantel statistic r: -0.4157, p: 0.978
+#Partial Mantel statistic r: -0.4157, p: 0.978
 
+#Partial Mantel using the upper triangle of the ocean matrix
+
+mantel.partial(upper_ocean_matrix, prbi_11_12_EW_fstlin, water_distance)
+#r: 0.3004, p: 0.082
 
