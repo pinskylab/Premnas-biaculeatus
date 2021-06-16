@@ -95,3 +95,24 @@ ggplot(aes(x=Species, y=Dispersal_Distance)) +
     legend.position="none"
   ) +
   ylab("Dispersal Distance (km)")
+
+#Graph without P. leopardus and P. areolatus
+
+fish_dispersal_short <- fish_dispersal[-c(4, 8), ]
+
+fish_dispersal_short %>%
+  mutate(Species = fct_relevel(Species, 
+                              "P. maculatus", "C. vagabundus", "A. percula",
+                               "A. clarkii", "P. biaculeatus","E. lori")) %>%
+  ggplot(aes(x=Species, y=Dispersal_Distance)) +
+  geom_segment( aes(x=Species, xend=Species, y=0, yend=Dispersal_Distance, color=Species), size=2) +
+  geom_point(aes(color=Species), size=4, alpha=0.6) +
+  theme_light() +
+  coord_flip() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks.y = element_blank(),
+    legend.position="none"
+  ) +
+  ylab("Dispersal Distance (km)")
