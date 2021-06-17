@@ -63,20 +63,28 @@ pos_coord <- fun.zero.omit(pos_coord) #omits zeros from the vector
 pos_coord <- sort(pos_coord) #orders from least to greatest
 pos_coord <- table(pos_coord) #gives frequency table, so each release site is only listed once
 
-i <- which(c(release_site_data)==2947)
+i <- which(c(release_site_data)==2427)
 c(lat_data)[i]  
 c(lon_data)[i]
 
 #Possible matching release sites: 2375, 2401 (pop 7?), 2402, 2426, 2427, 2428, 2454, 2455, 2457, 
 #2458, 2479, 2480, 2481, 2483 (pop 19?), 2484
 
+#Pop 1- site 2480  (site 2481 is also similar)
+#Pop 2- site 2480
+#Pop 7- site 2401
+#Pop 8- site 2426
+#Pop 9- site 2427 (maybe- is a little south)
+#Pop 10- site 2454 (maybe)
+#Pop 11- site 2555 (maybe)
+#Pop 19- site 2483
+
 
 #Then plot Fst on y-axis and probability of connection on the x-axis, for now average the two
 #potential connectivity values that come up (the matrix isn't symmetrical so there will be 2 values
 #between each population)
 
-#Set path and filename
-ncpath <- "C:\Users\kyras\OneDrive\Documents\GitHub\Premnas-biaculeatus\Downloaded Data\"
+
 
 
 
