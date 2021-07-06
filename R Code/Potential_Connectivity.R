@@ -86,23 +86,21 @@ c(lon_data)[i]
 #[dst site, src site] would be [other pop, pop 19], so [other site, 2483]
 #Order of vector: Pop 1, 2, 7, 8, 9, 10, 11, 19 
 pconnect_pop19src <- c(connect_data[2480, 2483], connect_data[2480, 2483], connect_data[2401, 2483], connect_data[2426, 2483],
-                      connect_data[2427, 2483], connect_data[2454, 2483], connect_data[2455, 2483],
-                      connect_data[2483, 2483])
+                      connect_data[2427, 2483], connect_data[2454, 2483], connect_data[2455, 2483])
 pconnect_pop19src
 
 connect_data[2483, 2483] #probability of self-recruitment?
 
 #2nd in direction of other pops to pop 19
 pconnect_pop19dst <- c(connect_data[2483, 2480], connect_data[2483, 2480], connect_data[2483, 2401], connect_data[2483, 2426],
-                       connect_data[2483, 2427], connect_data[2483, 2454], connect_data[2483, 2455],
-                       connect_data[2483, 2483])
+                       connect_data[2483, 2427], connect_data[2483, 2454], connect_data[2483, 2455])
 
 pconnect_pop19dst
 
 pconnect_avg <- apply(rbind(pconnect_pop19src, pconnect_pop19dst), 2, mean)
 pconnect_avg
 
-pop_numbers <- c(1, 2, 7, 8, 9, 10, 11, 19)
+pop_numbers <- c(1, 2, 7, 8, 9, 10, 11)
 
 pconnect_pop19src_df <- data.frame(pop_numbers, pconnect_pop19src)
 
@@ -121,14 +119,45 @@ pop19 #Data frame with pairwise linear Fst between pop 19 and the other pops
 pop19_dist <- c(0,0)
 pop19 <- rbind(pop19, pop19_dist)
 pop19 #Adding that the geographic and genetic distance from pop 19 to pop 19 is 0
+pop19 <- pop19[-c(8),] #deleting row with pop 19
+
+pconnect_avg_df <- data.frame(pop_numbers, pconnect_avg, pop19$GeneticDistance)
+pconnect_avg_df
 
 #Plotting average pconnect vs. lin Fst
 mod_pconnect_avg <- lm(pop19$GeneticDistance ~ pconnect_avg_df$pconnect_avg)
-summary(mod_pconnect_avg) #Adjusted R-squared:0.6164, p:0.01
+summary(mod_pconnect_avg) #Adjusted R-squared:0.823, p:0.003
 
 plot(pconnect_avg_df$pconnect_avg, pop19$GeneticDistance, pch=19)
 abline(mod_pconnect_avg, col="red")
 
+pconnect_avg_df$pop_numbers <- as.factor(pconnect_avg_df$pop_numbers)
+class(pconnect_avg_df$pop_numbers)
+
+ggplot(data=pconnect_avg_df, aes(x=pconnect_avg, 
+                                             y=pop19.GeneticDistance, color=pop_numbers)) +
+  geom_point(size=1.75) +
+  geom_smooth(method="lm", se=FALSE) +
+  theme_bw() +
+  xlab("PConnect") +
+  ylab("Fst/(1-Fst)") +
+  scale_color_manual(values = c("1" = "purple",
+                                "2"="orange",
+                                "7"="steelblue",
+                                "8"="red",
+                                "9"="gold",
+                                "10"="green",
+                                "11"="pink")) 
+
+ggplot(data=pconnect_avg_df, aes(x=pconnect_avg, 
+                                 y=pop19.GeneticDistance, color=pop_numbers)) +
+  geom_point(size=2.5) +
+  geom_smooth(method="lm", se=FALSE, color="steelblue") +
+  theme_bw() +
+  xlab("PConnect") +
+  ylab("Fst/(1-Fst)")
+
+pconnect_avg_df
 #Plotting pconnect with pop 19 as the source vs. lin Fst
 
 mod_pconnect_src <- lm(pop19$GeneticDistance ~ pconnect_pop19src_df$pconnect_pop19src)
