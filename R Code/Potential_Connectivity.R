@@ -109,7 +109,7 @@ pconnect_pop19dst_df <- data.frame(pop_numbers, pconnect_pop19dst)
 pconnect_avg_df <- data.frame(pop_numbers, pconnect_avg)
 
 #probability of pops 7, 8, and 9 dispersing passively to pop 19 is 0, whereas probability of pop 19
-#dispersing to pops 7, 8, and 9 is higher than others. Averaging the two may not show this relationship.
+#dispersing to pops 7, 8, and 9 is higher than others.
 
 #Then plot Fst on y-axis and probability of connection on the x-axis, for now average the two
 #potential connectivity values that come up (the matrix isn't symmetrical so there will be 2 values
@@ -158,22 +158,51 @@ ggplot(data=pconnect_avg_df, aes(x=pconnect_avg,
   ylab("Fst/(1-Fst)")
 
 pconnect_avg_df
+
+
 #Plotting pconnect with pop 19 as the source vs. lin Fst
 
 mod_pconnect_src <- lm(pop19$GeneticDistance ~ pconnect_pop19src_df$pconnect_pop19src)
-summary(mod_pconnect_src) #Adjusted R-squared: 0.6155, p:0.01293
+summary(mod_pconnect_src) #Adjusted R-squared: 0.8255, p:0.002895
 
 plot(pconnect_pop19src_df$pconnect_pop19src, pop19$GeneticDistance, pch=19)
 abline(mod_pconnect_src, col="red")
 
+
 #Plotting pconnect with pop 19 as the destination vs. lin Fst
 
 mod_pconnect_dst <- lm(pop19$GeneticDistance ~ pconnect_pop19dst_df$pconnect_pop19dst)
-summary(mod_pconnect_dst) #Adjusted R-squared: -0.1105, p:0.602
+summary(mod_pconnect_dst) #Adjusted R-squared: -0.1227, p:0.583
 
 plot(pconnect_pop19dst_df$pconnect_pop19dst, pop19$GeneticDistance, pch=19)
 abline(mod_pconnect_dst, col="red")  #pop 19 as the destination looks very different,
 #has pop 11 with a higher probability of connection than population 1 or 2- look into this
+
+
+pconnect_pop19src_df <- data.frame(pop_numbers, pconnect_pop19src, pop19$GeneticDistance)
+
+pconnect_pop19dst_df <- data.frame(pop_numbers, pconnect_pop19dst, pop19$GeneticDistance)
+
+pconnect_pop19src_df$pop_numbers <- as.factor(pconnect_pop19src_df$pop_numbers)
+pconnect_pop19dst_df$pop_numbers <- as.factor(pconnect_pop19dst_df$pop_numbers)
+
+#Ggplot with pop 19 as the source
+ggplot(data=pconnect_pop19src_df, aes(x=pconnect_pop19src, 
+                                 y=pop19.GeneticDistance, color=pop_numbers)) +
+  geom_point(size=2.5) +
+  geom_smooth(method="lm", se=FALSE, color="steelblue") +
+  theme_bw() +
+  xlab("PConnect- Pop 19 Source") +
+  ylab("Fst/(1-Fst)")
+
+#Ggplot with pop 19 as the destination
+ggplot(data=pconnect_pop19dst_df, aes(x=pconnect_pop19dst, 
+                                      y=pop19.GeneticDistance, color=pop_numbers)) +
+  geom_point(size=2.5) +
+  geom_smooth(method="lm", se=FALSE, color="steelblue") +
+  theme_bw() +
+  xlab("PConnect- Pop 19 Destination") +
+  ylab("Fst/(1-Fst)")
 
 #Could plot with a legend showing the population number 
 #Could map coordinates used from the pconnect matrix and compare to our populations, 
