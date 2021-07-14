@@ -329,6 +329,10 @@ plot(pconnect_avg_matrix_noself, prbi_11_12_EW_full_fstlin_noself,
      pch=20)
 abline(mod_pconnect_matrix_noself, col="red")
 
+check_model(mod_pconnect_matrix_noself)
+plot(mod_pconnect_matrix_noself)
+#Residuals vs. leverage plot looks better than before, but still not great
+
 
 ##Partial Mantel test of oceanographic distance vs. genetic distance, while controlling for geographic distance (in km)
 
