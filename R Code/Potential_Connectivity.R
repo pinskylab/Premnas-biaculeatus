@@ -275,6 +275,61 @@ plot(pconnect_avg_matrix, prbi_11_12_EW_full_fstlin,
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
      pch=20)
 
+#Run a linear regression between average pconnect and linearized Fst
+y <- as.numeric(prbi_11_12_EW_full_fstlin)
+x <- as.numeric(pconnect_avg_matrix)
+
+mod_pconnect_matrix <- lm(y~x)
+summary(mod_pconnect_matrix)
+#Adjusted R-squared: 0.04248, p-value: 0.06909
+
+
+plot(pconnect_avg_matrix, prbi_11_12_EW_full_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+abline(mod_pconnect_matrix, col="red")
+
+#Use performance package to see how outliers are influencing model
+library(performance)
+check_model(mod_pconnect_matrix)
+plot(mod_pconnect_matrix)
+
+#Looks like the 0.3 pconnect point has too much leverage, this is the pconnect between 
+#pops 1 and 2 which are the same release site, at this point the pconnect of self-recruitment is not
+#included, so I'll try excluding it, may need to run again while including self-recruitment
+#0.105 pconnect is between pops 9 and 8
+#0.127 pconnect is between pops 8 and 10- geographic distance seems to have the better 
+#correlation her as pops 8 and 9 have a lin Fst closer to 0 than pops 8 and 10 despite the 
+#higher pconnect
+#0.0777 pconnect is between pops 9 and 10
+
+#Remove pconnect between sites 1 and 2 (self-recruitment pconnect)
+
+pconnect_avg_matrix_noself <- pconnect_avg_matrix
+pconnect_avg_matrix_noself[1, 2] <- NA
+pconnect_avg_matrix_noself[2,1] <- NA
+
+prbi_11_12_EW_full_fstlin_noself <- prbi_11_12_EW_full_fstlin
+prbi_11_12_EW_full_fstlin_noself[1, 2] <- NA
+prbi_11_12_EW_full_fstlin_noself[2,1] <- NA
+
+mantel(pconnect_avg_matrix_noself, prbi_11_12_EW_full_fstlin_noself)
+#Won't run because missing observations
+
+y2 <- as.numeric(prbi_11_12_EW_full_fstlin_noself)
+x2 <- as.numeric(pconnect_avg_matrix_noself)
+
+mod_pconnect_matrix_noself <- lm(y2~x2)
+summary(mod_pconnect_matrix_noself)
+#Adjusted R-squared: 0.2216, p-value: 0.000194
+
+
+plot(pconnect_avg_matrix_noself, prbi_11_12_EW_full_fstlin_noself, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+abline(mod_pconnect_matrix_noself, col="red")
+
+
 ##Partial Mantel test of oceanographic distance vs. genetic distance, while controlling for geographic distance (in km)
 
 #Using over-water geographic distances calculated using ruler tool in Google Earth
