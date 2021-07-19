@@ -26,6 +26,7 @@ lon_data[1:10, 1:10]
 
 lat_data <- ncvar_get(latlon_matrix, varid="lat")
 print(lat_data)
+lat_data[1:10, 1:10]
 
 release_site_data <- ncvar_get(latlon_matrix, varid="release_site")
 print(release_site_data)
@@ -65,7 +66,7 @@ pos_coord <- fun.zero.omit(pos_coord) #omits zeros from the vector
 pos_coord <- sort(pos_coord) #orders from least to greatest
 pos_coord <- table(pos_coord) #gives frequency table, so each release site is only listed once
 
-i <- which(c(release_site_data)==2555)
+i <- which(c(release_site_data)==2481)
 c(lat_data)[i]  
 c(lon_data)[i]
 
@@ -352,6 +353,142 @@ upperTriangle(water_distance) <- lowerTriangle(water_distance, byrow=TRUE)
 mantel.partial(pconnect_avg_matrix, prbi_11_12_EW_full_fstlin, water_distance)
 #Mantel statistic r: -0.2004, p-value: 0.846, 999 permutations
 
+
+##Changing Pop 1 to release site 2481##
+
+#Pop 1- site 2481
+#Pop 2- site 2480
+#Pop 7- site 2401
+#Pop 8- site 2426
+#Pop 9- site 2427 
+#Pop 10- site 2454
+#Pop 11- site 2455
+#Pop 19- site 2483
+
+#Lower triangle pconnect matrix 
+#Pop 19 as the destination
+
+pconnect_lowertri_2481_vector <- c(NA, NA, NA, NA, NA, NA, NA, NA,
+                              connect_data[2480, 2481], NA, NA, NA, NA, NA, NA, NA,
+                              connect_data[2401, 2481], connect_data[2401, 2480], NA, NA, NA, NA, NA, NA,
+                              connect_data[2426, 2481], connect_data[2426, 2480], connect_data[2426, 2401], NA, NA, NA, NA, NA,
+                              connect_data[2427, 2481], connect_data[2427, 2480], connect_data[2427, 2401], connect_data[2427, 2426], NA, NA, NA, NA,
+                              connect_data[2454, 2481], connect_data[2454, 2480], connect_data[2454, 2401], connect_data[2454, 2426], connect_data[2454, 2427], NA, NA, NA,
+                              connect_data[2455, 2481], connect_data[2455, 2480], connect_data[2455, 2401], connect_data[2455, 2426], connect_data[2455, 2427], connect_data[2455, 2454], NA, NA,
+                              connect_data[2483, 2481], connect_data[2483, 2480], connect_data[2483, 2401], connect_data[2483, 2426], connect_data[2483, 2427], connect_data[2483, 2454], connect_data[2483, 2455], NA)
+pconnect_lowertri_2481 <- matrix(pconnect_lowertri_2481_vector, nrow=8)
+pconnect_lowertri_2481
+colnames(pconnect_lowertri_2481) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+rownames(pconnect_lowertri_2481) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+
+#Upper triangle pconnect matrix
+#Pop 19 as the source
+
+pconnect_uppertri_2481_vector <- c(NA, NA, NA, NA, NA, NA, NA, NA,
+                              connect_data[2481, 2480], NA, NA, NA, NA, NA, NA, NA,
+                              connect_data[2481, 2401], connect_data[2480, 2401], NA, NA, NA, NA, NA, NA,
+                              connect_data[2481, 2426], connect_data[2480, 2426], connect_data[2401, 2426], NA, NA, NA, NA, NA,
+                              connect_data[2481, 2427], connect_data[2480, 2427], connect_data[2401, 2427], connect_data[2426, 2427], NA, NA, NA, NA,
+                              connect_data[2481, 2454], connect_data[2480, 2454], connect_data[2401, 2454], connect_data[2426, 2454], connect_data[2427, 2454], NA, NA, NA,
+                              connect_data[2481, 2455], connect_data[2480, 2455], connect_data[2401, 2455], connect_data[2426, 2455], connect_data[2427, 2455], connect_data[2454, 2455], NA, NA,
+                              connect_data[2481, 2483], connect_data[2480, 2483], connect_data[2401, 2483], connect_data[2426, 2483], connect_data[2427, 2483], connect_data[2454, 2483], connect_data[2455, 2483], NA)
+
+pconnect_uppertri_2481 <- matrix(pconnect_uppertri_2481_vector, nrow=8)
+pconnect_uppertri_2481
+colnames(pconnect_uppertri_2481) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+rownames(pconnect_uppertri_2481) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+
+#Compute average pconnect matrix
+
+pconnect_avg_2481_matrix <- apply(rbind(pconnect_lowertri_2481_vector, pconnect_uppertri_2481_vector), 2, mean)
+pconnect_avg_2481_matrix <- matrix(pconnect_avg_2481_matrix, nrow=8)
+pconnect_avg_2481_matrix
+colnames(pconnect_avg_2481_matrix) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+rownames(pconnect_avg_2481_matrix) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+
+#Flip values across diagonal, so they are in the lower triangle of the matrix
+
+library(gdata)
+lowerTriangle(pconnect_avg_2481_matrix) <- upperTriangle(pconnect_avg_2481_matrix, byrow=TRUE)
+
+#Mantel test between average pconnect and linearized Fst 
+
+library(vegan)
+mantel(pconnect_avg_2481_matrix, prbi_11_12_EW_full_fstlin) 
+#Mantel statistic r: -0.4809, p-value: 0.994, 999 permutations
+
+plot(pconnect_avg_2481_matrix, prbi_11_12_EW_full_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+
+#Run a linear regression between average pconnect and linearized Fst
+y <- as.numeric(prbi_11_12_EW_full_fstlin)
+x <- as.numeric(pconnect_avg_2481_matrix)
+
+mod_pconnect_2481_matrix <- lm(y~x)
+summary(mod_pconnect_2481_matrix)
+#Adjusted R-squared: 0.217, p-value: 0.0001758
+
+cor.test(x, y, method='pearson')
+#cor: -0.480878, p-value: 0.0001758
+
+
+plot(pconnect_avg_2481_matrix, prbi_11_12_EW_full_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+abline(mod_pconnect_2481_matrix, col="red")
+
+#Partial Mantel test controlling for over water geographic distance
+
+mantel.partial(pconnect_avg_2481_matrix, prbi_11_12_EW_full_fstlin, water_distance)
+#Mantel statistic r: -0.4729, p-value: 0.996, 999 permutations
+
+
+##Plot Pop 19 compared to other pops with 2481 as pop 1 release site##
+
+#Make vector with pconnect between pop 19 and other pops
+
+#1st in direction of pop 19 to other pops
+#[dst site, src site] would be [other pop, pop 19], so [other site, 2483]
+#Order of vector: Pop 1, 2, 7, 8, 9, 10, 11, 19 
+pconnect_pop19src_2481 <- c(connect_data[2481, 2483], connect_data[2480, 2483], connect_data[2401, 2483], connect_data[2426, 2483],
+                       connect_data[2427, 2483], connect_data[2454, 2483], connect_data[2455, 2483])
+pconnect_pop19src_2481
+
+#2nd in direction of other pops to pop 19
+pconnect_pop19dst_2481 <- c(connect_data[2483, 2481], connect_data[2483, 2480], connect_data[2483, 2401], connect_data[2483, 2426],
+                       connect_data[2483, 2427], connect_data[2483, 2454], connect_data[2483, 2455])
+
+pconnect_pop19dst_2481
+
+pconnect_avg_2481 <- apply(rbind(pconnect_pop19src_2481, pconnect_pop19dst_2481), 2, mean)
+pconnect_avg_2481
+
+pop_numbers <- c(1, 2, 7, 8, 9, 10, 11)
+
+pconnect_avg_2481_df <- data.frame(pop_numbers, pconnect_avg_2481, pop19$GeneticDistance)
+pconnect_avg_2481_df
+
+#Plotting average pconnect vs. lin Fst
+mod_pconnect_2481_avg <- lm(pconnect_avg_2481_df$pop19.GeneticDistance ~ pconnect_avg_2481_df$pconnect_avg_2481)
+summary(mod_pconnect_2481_avg) #Adjusted R-squared:0.7537, p:0.00702
+
+cor.test(pconnect_avg_2481_df$pconnect_avg_2481, pconnect_avg_2481_df$pop19.GeneticDistance, method = 'pearson')
+#cor: -0.89, p-value: 0.007, df=5
+
+plot(pconnect_avg_2481_df$pconnect_avg_2481, pop19$GeneticDistance, pch=19)
+abline(mod_pconnect_2481_avg, col="red")
+
+pconnect_avg_2481_df$pop_numbers <- as.factor(pconnect_avg_2481_df$pop_numbers)
+class(pconnect_avg_df$pop_numbers)
+
+ggplot(data=pconnect_avg_2481_df, aes(x=pconnect_avg_2481, 
+                                 y=pop19.GeneticDistance, color=pop_numbers)) +
+  geom_point(size=2.5) +
+  geom_smooth(method="lm", se=FALSE, color="steelblue") +
+  theme_bw() +
+  xlab("PConnect") +
+  ylab("Fst/(1-Fst)")
 
 
 #For reference
