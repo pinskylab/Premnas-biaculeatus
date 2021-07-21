@@ -553,6 +553,21 @@ plot(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin,
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
      pch=20)
 
+y <- as.numeric(prbi_11_12_comb12_fstlin)
+x <- as.numeric(pconnect_avg_comb12_matrix)
+
+mod_pconnect_comb12_matrix <- lm(y~x)
+summary(mod_pconnect_comb12_matrix)
+#Adjusted R-squared: 0.175, p-value: 0.003409
+
+cor.test(x, y, method='pearson')
+#cor: -0.4416733, p-value: 0.003409
+
+plot(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+abline(mod_pconnect_comb12_matrix, col="red")
+
 #Partial Mantel test controlling for over water geographic distance
 
 #Load in matrix with over water distances
@@ -586,6 +601,21 @@ mantel(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin)
 plot(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, 
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
      pch=20)
+
+y <- as.numeric(prbi_11_12_comb12_no19_fstlin)
+x <- as.numeric(pconnect_avg_comb12_no19_matrix)
+
+mod_pconnect_comb12_no19_matrix <- lm(y~x)
+summary(mod_pconnect_comb12_no19_matrix)
+#Adjusted R-squared: 0.08165, p-value: 0.06892
+
+cor.test(x, y, method='pearson')
+#cor: -0.3366305, p-value: 0.06892
+
+plot(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+abline(mod_pconnect_comb12_no19_matrix, col="red")
 
 #Partial Mantel test
 
