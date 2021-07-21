@@ -491,6 +491,84 @@ ggplot(data=pconnect_avg_2481_df, aes(x=pconnect_avg_2481,
   ylab("Fst/(1-Fst)")
 
 
+#Excluding pop 19 from pairwise matrices while using release site 2481 for pop 1#
+
+pconnect_avg_2481_no19_matrix <- pconnect_avg_2481_matrix[-8, -8]
+
+upperTriangle(prbi_11_12_EW_no19_fstlin) <- lowerTriangle(prbi_11_12_EW_no19_fstlin, byrow=TRUE)
+
+#Mantel test between average pconnect and linearized Fst 
+
+mantel(pconnect_avg_2481_no19_matrix, prbi_11_12_EW_no19_fstlin) 
+#Mantel statistic r: -0.4296, p-value: 0.967, 5039 permutations
+
+plot(pconnect_avg_2481_no19_matrix, prbi_11_12_EW_no19_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+
+#Run a linear regression between average pconnect and linearized Fst
+y <- as.numeric(prbi_11_12_EW_no19_fstlin)
+x <- as.numeric(pconnect_avg_2481_no19_matrix)
+
+mod_pconnect_2481_no19_matrix <- lm(y~x)
+summary(mod_pconnect_2481_no19_matrix)
+#Adjusted R-squared: 0.1642, p-value: 0.004524
+
+cor.test(x, y, method='pearson')
+#cor: -0.4295782, p-value: 0.004524
+
+
+plot(pconnect_avg_2481_no19_matrix, prbi_11_12_EW_no19_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+abline(mod_pconnect_2481_no19_matrix, col="red")
+
+#Partial Mantel test controlling for over water geographic distance
+
+water_distance_no19 <- water_distance[-8, -8]
+
+mantel.partial(pconnect_avg_2481_no19_matrix, prbi_11_12_EW_no19_fstlin, water_distance_no19)
+#Mantel statistic r: -0.2141, p-value: 0.776, 5039 permutations
+
+
+##Pairwise matrix with pops 1 and 2 Fst combined and release site 2480 for pop 1#
+#Pop 1- site 2480
+#Pop 7- site 2401
+#Pop 8- site 2426
+#Pop 9- site 2427
+#Pop 10- site 2454 
+#Pop 11- site 2455 
+#Pop 19- site 2483
+
+pconnect_avg_comb12_matrix <- pconnect_avg_matrix[-2, -2]
+
+upperTriangle(prbi_11_12_comb12_fstlin) <- lowerTriangle(prbi_11_12_comb12_fstlin, byrow=TRUE)
+
+#Mantel test between average pconnect and linearized Fst 
+
+mantel(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin) 
+#Mantel statistic r: -0.4417, p-value: 0.975, 5039 permutations
+
+plot(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+
+
+##Pairwise matrix with pops 1 and 2 Fst combined and release site 2480 for pop 1 and pop 19 excluded##
+
+pconnect_avg_comb12_no19_matrix <- pconnect_avg_comb12_matrix[-7, -7]
+
+prbi_11_12_comb12_no19_fstlin <- prbi_11_12_comb12_fstlin[-7, -7]
+
+#Mantel test between average pconnect and linearized Fst 
+
+mantel(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin) 
+#Mantel statistic r: -0.3366, p-value: 0.81667, 719 permutations
+
+plot(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
+
 #For reference
 colnames(prbi_11_12_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
 rownames(prbi_11_12_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
