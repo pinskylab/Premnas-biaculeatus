@@ -553,6 +553,24 @@ plot(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin,
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
      pch=20)
 
+#Partial Mantel test controlling for over water geographic distance
+
+#Load in matrix with over water distances
+
+water_distance_comb12 <- read.csv("OverWater_Comb12_Distance.csv")
+water_distance_comb12 <- as.matrix(water_distance_comb12)
+water_distance_comb12 <- water_distance_comb12[, -1]
+colnames(water_distance_comb12) <- c(1, 7, 8, 9, 10, 11, 19)
+rownames(water_distance_comb12) <- c(1, 7, 8, 9, 10, 11, 19)
+
+#Make matrix symmetrical
+upperTriangle(water_distance_comb12) <- lowerTriangle(water_distance_comb12, byrow=TRUE)
+
+#Run Partial Mantel test
+mantel.partial(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin, water_distance_comb12)
+#Mantel statistic r: -0.4151, p-value: 0.963, 5039 permutations
+
+
 
 ##Pairwise matrix with pops 1 and 2 Fst combined and release site 2480 for pop 1 and pop 19 excluded##
 
@@ -568,6 +586,17 @@ mantel(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin)
 plot(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, 
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
      pch=20)
+
+#Partial Mantel test
+
+water_distance_comb12_no19 <- water_distance_comb12[-7, -7]
+
+mantel.partial(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, water_distance_comb12_no19)
+
+#Mantel statistic r: -0.01532, p-value: 0.52361, 719 permutations
+
+
+
 
 #For reference
 colnames(prbi_11_12_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
