@@ -491,6 +491,7 @@ ggplot(data=pconnect_avg_2481_df, aes(x=pconnect_avg_2481,
   ylab("Fst/(1-Fst)")
 
 
+
 #Excluding pop 19 from pairwise matrices while using release site 2481 for pop 1#
 
 pconnect_avg_2481_no19_matrix <- pconnect_avg_2481_matrix[-8, -8]
@@ -529,6 +530,28 @@ water_distance_no19 <- water_distance[-8, -8]
 
 mantel.partial(pconnect_avg_2481_no19_matrix, prbi_11_12_EW_no19_fstlin, water_distance_no19)
 #Mantel statistic r: -0.2141, p-value: 0.776, 5039 permutations
+
+#Plot showing pop 19 in a different color 
+
+pconnect_avg_2481_matrix[upper.tri(pconnect_avg_2481_matrix, diag=T)] = NA
+prbi_11_12_EW_full_fstlin[upper.tri(prbi_11_12_EW_full_fstlin, diag=T)] = NA
+
+pconnectframe_2481 <- tibble(PConnect=as.vector(pconnect_avg_2481_matrix), 
+                               GeneticDistance=as.vector(prbi_11_12_EW_full_fstlin))
+pconnectframe_2481 <- drop_na(pconnectframe_2481)
+
+pop19_2481 <- tibble(PConnect = as.vector(pconnect_avg_2481_matrix[8,]),
+                       GeneticDistance = as.vector(prbi_11_12_EW_full_fstlin[8,]))
+pop19_2481 <- drop_na(pop19_2481)
+
+ggplot(data=pconnectframe_2481, aes(x=PConnect, 
+                                      y=GeneticDistance)) +
+  geom_point(size=1.75) +
+  geom_point(data=pop19_2481, aes(x=PConnect, y=GeneticDistance), color="red", size=1.75) +
+  geom_smooth(method="lm", se=FALSE) +
+  theme_bw() +
+  xlab("Potential Connectivity") +
+  ylab("Genetic Distance (Fst/(1-Fst)")
 
 
 ##Pairwise matrix with pops 1 and 2 Fst combined and release site 2480 for pop 1#
@@ -625,6 +648,28 @@ mantel.partial(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, w
 
 #Mantel statistic r: -0.01532, p-value: 0.52361, 719 permutations
 
+
+#Plot showing 19 in different color
+
+pconnect_avg_comb12_matrix[upper.tri(pconnect_avg_comb12_matrix, diag=T)] = NA
+prbi_11_12_comb12_fstlin[upper.tri(prbi_11_12_comb12_fstlin, diag=T)] = NA
+
+pconnectframe_comb12 <- tibble(PConnect=as.vector(pconnect_avg_comb12_matrix), 
+                        GeneticDistance=as.vector(prbi_11_12_comb12_fstlin))
+pconnectframe_comb12 <- drop_na(pconnectframe_comb12)
+
+pop19_comb12 <- tibble(PConnect = as.vector(pconnect_avg_comb12_matrix[7,]),
+                GeneticDistance = as.vector(prbi_11_12_comb12_fstlin[7,]))
+pop19_comb12 <- drop_na(pop19_comb12)
+
+ggplot(data=pconnectframe_comb12, aes(x=PConnect, 
+                                             y=GeneticDistance)) +
+  geom_point(size=1.75) +
+  geom_point(data=pop19_comb12, aes(x=PConnect, y=GeneticDistance), color="red", size=1.75) +
+  geom_smooth(method="lm", se=FALSE) +
+  theme_bw() +
+  xlab("Potential Connectivity") +
+  ylab("Genetic Distance (Fst/(1-Fst)")
 
 
 
