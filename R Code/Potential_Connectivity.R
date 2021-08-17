@@ -563,6 +563,8 @@ ggplot(data=pconnectframe_2481, aes(x=PConnect,
 #Pop 11- site 2455 
 #Pop 19- site 2483
 
+#Fst matrix is read in and linearized in "PRBI IBD analysis.R" script
+
 pconnect_avg_comb12_matrix <- pconnect_avg_matrix[-2, -2]
 
 upperTriangle(prbi_11_12_comb12_fstlin) <- lowerTriangle(prbi_11_12_comb12_fstlin, byrow=TRUE)
@@ -670,6 +672,66 @@ ggplot(data=pconnectframe_comb12, aes(x=PConnect,
   theme_bw() +
   xlab("Potential Connectivity") +
   ylab("Genetic Distance (Fst/(1-Fst)")
+
+
+##Plot Pop 19 compared to other pops with pops 1 and 2 combined (release site 2480)##
+
+#Make vector with pconnect between pop 19 and other pops
+
+#Pop 1- site 2480
+#Pop 7- site 2401
+#Pop 8- site 2426
+#Pop 9- site 2427
+#Pop 10- site 2454 
+#Pop 11- site 2455 
+#Pop 19- site 2483
+
+#1st in direction of pop 19 to other pops
+#[dst site, src site] would be [other pop, pop 19], so [other site, 2483]
+#Order of vector: Pop 1, 7, 8, 9, 10, 11, 19 
+pconnect_pop19src_comb12 <- c(connect_data[2480, 2483],connect_data[2401, 2483], connect_data[2426, 2483],
+                            connect_data[2427, 2483], connect_data[2454, 2483], connect_data[2455, 2483])
+pconnect_pop19src_comb12
+
+#2nd in direction of other pops to pop 19
+pconnect_pop19dst_comb12 <- c(connect_data[2483, 2480], connect_data[2483, 2401], connect_data[2483, 2426],
+                            connect_data[2483, 2427], connect_data[2483, 2454], connect_data[2483, 2455])
+
+pconnect_pop19dst_comb12
+
+pconnect_avg_comb12 <- apply(rbind(pconnect_pop19src_comb12, pconnect_pop19dst_comb12), 2, mean)
+pconnect_avg_comb12
+
+pop_numbers_comb12 <- c(1, 7, 8, 9, 10, 11)
+
+pop19_comb12_linfst <- as.vector(prbi_11_12_comb12_fstlin[7,])
+pop19_comb12_linfst <- pop19_comb12_linfst[-7]
+
+        
+pconnect_avg_comb12_df <- data.frame(pop_numbers_comb12, pconnect_avg_comb12, pop19_comb12_linfst)
+pconnect_avg_comb12_df
+
+
+#Plotting average pconnect vs. lin Fst
+mod_pconnect_comb12_avg <- lm(pconnect_avg_comb12_df$pop19_comb12_linfst ~ pconnect_avg_comb12_df$pconnect_avg_comb12)
+summary(mod_pconnect_comb12_avg) #Adjusted R-squared:0.9022, p:0.002359
+
+cor.test(pconnect_avg_comb12_df$pconnect_avg_comb12, pconnect_avg_comb12_df$pop19_comb12_linfst, method = 'pearson')
+#cor: -0.9600763, p-value: 0.002359, df=4
+
+plot(pconnect_avg_comb12_df$pconnect_avg_comb12, pconnect_avg_comb12_df$pop19_comb12_linfst, pch=19)
+abline(mod_pconnect_comb12_avg, col="red")
+
+pconnect_avg_comb12_df$pop_numbers_comb12 <- as.factor(pconnect_avg_comb12_df$pop_numbers_comb12)
+class(pconnect_avg_comb12_df$pop_numbers_comb12)
+
+ggplot(data=pconnect_avg_comb12_df, aes(x=pconnect_avg_comb12, 
+                                      y=pop19_comb12_linfst, color=pop_numbers_comb12)) +
+  geom_point(size=2.5) +
+  geom_smooth(method="lm", se=FALSE, color="steelblue") +
+  theme_bw() +
+  xlab("PConnect") +
+  ylab("Fst/(1-Fst)")
 
 
 

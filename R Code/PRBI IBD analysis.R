@@ -426,6 +426,8 @@ abline(mod_EW_no19_log, col="red")
 mantel(log(prbi_EW_no19_geodist_km), prbi_11_12_EW_no19_fstlin) 
 #r: 0.4324 p: 0.011
 
+
+
 #Calculating Fst with pops 1 and 2 combined as a population
 
 Fst("PRBI_genepop_2009-11-12_comb12.gen.txt", pairs = TRUE, outputFile = "prbi_genepop_2009-11-12_comb12_fst.txt", 
@@ -441,6 +443,8 @@ rownames(prbi_11_12_comb12_fst) <- c(1, 7, 8, 9, 10, 11, 19)
 
 #Linearize Fst (Fst/(1-Fst))
 prbi_11_12_comb12_fstlin = as.matrix(prbi_11_12_comb12_fst/(1-prbi_11_12_comb12_fst))
+
+
 
 
 
