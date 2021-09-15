@@ -34,6 +34,30 @@ k = surv$RandomSite == 1
 #Sum of survey counts at all random sites
 sum(surv$countPRBI[k])  #28 fish
 
+length(surv$countPRBI[k])
+
+#Confidence interval for number of fish
+hist(surv$countPRBI[k]) #does not look normal, will bootstrap instead
+
+random_density <- tibble(count=surv$countPRBI[k])
+random_density
+
+library(tidyverse) 
+library(infer)
+
+surv_resample <- rep_sample_n(random_density, size = 1, replace = TRUE, reps = 10000)
+
+surv_resample
+mean(surv_resample$count) #1.4546
+
+#Compare bootstrap mean to sample mean
+mean(surv$countPRBI[k]) #1.473684
+
+#Generate confidence interval:
+#Calculate standard error
+std_error <- sd(surv_resample$count) / sqrt(length(surv_resample$count))
+std_error #0.02213285
+
 #Density (fish/km2) of all life stages of PRBI at all random sites using counts/area
 (sum(surv$countPRBI[k]))/(sum(surv$area[k]/1000)) #(=0.2517 fish/km2)
 

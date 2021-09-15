@@ -28,7 +28,7 @@ integrate_kernel_sum1 <- function(d, k, theta){
 
 #Trying out Gaussian kernel
 
-sigma=9.02
+sigma=5
 
 #Mean Gaussian dispersal distance:
 
@@ -42,10 +42,21 @@ gaussian_kernel <- function(sigma, x){
 
 #Want plot with dispersal strength on y-axis and distance (km) on x-axis
 
-x = seq(0, 50, 0.01)
+x = seq(0, 50, 0.0001)
 
-y = (1/sigma*sqrt(2*3.14))*exp(-(x^2)/2*sigma^2)
+y = (1/sigma*sqrt(2*3.14))*exp(-(x^2)/2*sigma^2)  #1 is the shape parameter?
+y
 
-par(bg="dark blue")
+
+y = 1/(sigma*sqrt(2))*exp(-(sqrt(2*x))/sigma) #Lapacian
+
+y2 = 2/(sigma*sqrt(2))*exp(-(sqrt(2*x))/sigma) #not sure why this shape is not changing
+
+plot(x, y2, type="l")
+
+plot(x, y, type="l")
+
+
+par(bg="white")
 plot(x,y,type="l", col=NA, xaxt="n", yaxt="n", bty="n", xlab="", ylab="")
 polygon(x,y, col="grey", border=NA)

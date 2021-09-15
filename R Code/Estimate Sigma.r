@@ -32,6 +32,16 @@ summarizeSigmas(sigmas=s1$sigmas, sg=3) # report distribution for sigma
 #With df=3:
 #Point value for sigma: 8.257652, mean: 9.02, median: 8.23, SD: 8.32, Lower 95% CI: 5.48, Upper 95% CI: 16.8
 
+#With df=3 and Waples_Nbu95=69,421:
+
+D1 <- DeFromNb(niter, AL, alpha, Waples_Nb=6942.1, Waples_Nbl95=779.5, Waples_Nbu95=69421, A=130) # estimate De
+s1 <- sigmaFrom_m(De=D1$De, Des=D1$Des, m=m, mse=mse, dims=1) # estimate sigma
+s1$sigma_point # report point value for sigma (8.2577) with df=129
+summarizeSigmas(sigmas=s1$sigmas, sg=3) # report distribution for sigma
+
+#Point value for sigma: 8.257652, mean: 8.33, median: 7.41, SD: 6.36, Lower 95% CI: 2.11, Upper 95% CI: 19.4
+
+
 
 	# Using Waples Nb and Migraine estimate of Wright's neighborhood size
 s2 <- sigmaFrom_NbWright(De=D1$De, Des=D1$Des, NbWright=7738, NbWright_l95=6806, NbWright_u95=10527, dims=1)
