@@ -42,7 +42,6 @@ summarizeSigmas(sigmas=s1$sigmas, sg=3) # report distribution for sigma
 #Point value for sigma: 8.257652, mean: 8.33, median: 7.41, SD: 6.36, Lower 95% CI: 2.11, Upper 95% CI: 19.4
 
 
-
 	# Using Waples Nb and Migraine estimate of Wright's neighborhood size
 s2 <- sigmaFrom_NbWright(De=D1$De, Des=D1$Des, NbWright=7738, NbWright_l95=6806, NbWright_u95=10527, dims=1)
 s2$sigma_point

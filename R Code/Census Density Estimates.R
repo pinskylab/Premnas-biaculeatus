@@ -42,6 +42,9 @@ hist(surv$countPRBI[k]) #does not look normal, will bootstrap instead
 random_density <- tibble(count=surv$countPRBI[k])
 random_density
 
+install.packages("boot")
+library(boot)
+
 library(tidyverse) 
 library(infer)
 

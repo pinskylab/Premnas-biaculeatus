@@ -276,6 +276,9 @@ Fst("PRBI_genepop_2009-11-12.gen.txt", pairs = TRUE, outputFile = "prbi_genepop_
 
 #Results in prbi_genepop_2009-11-12_fst.csv and prbi_genepop_2009-11-12_fst.csv.MIG
 
+#Test for Hardy Weinberg
+test_HW("PRBI_genepop_2009-11-12.gen.txt", outputFile="prbi_hw_11-12.txt")
+
 #Generate Fst matrix
 prbi_11_12_fst <- read.csv("2009-11-12 All Pop All Loci.csv")
 prbi_11_12_fst <- as.matrix(prbi_11_12_fst)
@@ -344,6 +347,12 @@ abline(a=line_11_12_EW$coef[1], b=line_11_12_EW$coef[2], col="red", lwd=1)
 mantel(prbi_EW_geodist_km, prbi_11_12_EW_fstlin) 
 #r: 0.1604 p: 0.235
 
+y <- as.numeric(prbi_11_12_EW_fstlin)
+x <- as.numeric(prbi_EW_geodist_km)
+mod_EW <- lm(y~x)
+summary(mod_EW)
+#Multiple R-squared: 0.02574, adjusted R-squared: -0.01174, F-statistic 0.6868 on 1 and 26 DF, p-value: 0.4148
+#slope estimate: 1.682e-05, std. error: 2.030e-05, t-value:0.829
 
 #2009-11-12 data without populations 13, 14, 15, 19, 22 (East-West transect wout 19)
 
