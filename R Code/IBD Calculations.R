@@ -37,6 +37,21 @@ de_length <- 6942/130  #De=53.4 fish/km
 disp_length <- sqrt(1/(4*de_length*m))  #8.653 km 
 
 
+#With over water distance
+
+m <- 5.393e-05
+
+disp_waterdist <- sqrt(1/(4*de_length*m)) #9.317173
+
+
+#With over water distance and adjusted Ne from overlapping generations equations
+
+de_corrected <- Ne/130 #De corrected=58.656 fish/km
+
+disp_water_dist_corrected <- sqrt(1/(4*de_corrected*m)) #8.889925
+
+
+
 ##############################################################
 
 ##Using census density estimate (all PRBI at random sites)

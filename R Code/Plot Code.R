@@ -10,7 +10,8 @@ library(formattable)
 #Convert genetic distance and geographic distance matrices into a dataframe
 
 distanceframe <- tibble(GeographicDistance=as.vector(prbi_EW_no19_geodist_km), 
-                        GeneticDistance=as.vector(prbi_11_12_EW_no19_fstlin))
+                        GeneticDistance=as.vector(prbi_11_12_EW_no19_fstlin), 
+                        WaterDistance=as.vector(water_distance_no19))
 distanceframe <- drop_na(distanceframe)
 
 mod_distanceframe <- lm(distanceframe$GeneticDistance~distanceframe$GeographicDistance)
@@ -47,15 +48,15 @@ ggplot(data=distanceframe, aes(x=GeographicDistance, y=GeneticDistance)) +
 
 #Plot showing populations vs. pop 19
 
-pop19 <- tibble(GeographicDistance = as.vector(prbi_EW_geodist_km[8,]),
+pop19 <- tibble(GeographicDistance = as.vector(water_distance[8,]),
                 GeneticDistance = as.vector(prbi_11_12_EW_fstlin[8,]))
 pop19 <- drop_na(pop19)
 
-ggplot(data=augmented_mod_distanceframe, aes(x=distanceframe$GeographicDistance, 
+ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance, 
                                              y=distanceframe$GeneticDistance)) +
-  geom_point(size=1.75) +
-  geom_point(data=pop19, aes(x=GeographicDistance, y=GeneticDistance), color="red", size=1.75) +
-  geom_smooth(method="lm", se=FALSE) +
+  geom_point(color="#7b3294", size=1.75) +
+  geom_point(data=pop19, aes(x=GeographicDistance, y=GeneticDistance), color="#008837", size=1.75) +
+  geom_smooth(method="lm", color="#7b3294", fill="#c2a5cf") +
   theme_bw() +
   xlab("Geographic Distance (km)") +
   ylab("Genetic Distance (Fst/(1-Fst)")

@@ -666,9 +666,9 @@ pop19_comb12 <- drop_na(pop19_comb12)
 
 ggplot(data=pconnectframe_comb12, aes(x=PConnect, 
                                              y=GeneticDistance)) +
-  geom_point(size=1.75) +
-  geom_point(data=pop19_comb12, aes(x=PConnect, y=GeneticDistance), color="red", size=1.75) +
-  geom_smooth(method="lm", se=FALSE) +
+  geom_point(size=1.75, color="#7b3294") +
+  geom_point(data=pop19_comb12, aes(x=PConnect, y=GeneticDistance), color="#008837", size=1.75) +
+  geom_smooth(data=pop19_comb12, method="lm", se=FALSE, color="#008837") +
   theme_bw() +
   xlab("Potential Connectivity") +
   ylab("Genetic Distance (Fst/(1-Fst)")
@@ -714,7 +714,9 @@ pconnect_avg_comb12_df
 
 #Plotting average pconnect vs. lin Fst
 mod_pconnect_comb12_avg <- lm(pconnect_avg_comb12_df$pop19_comb12_linfst ~ pconnect_avg_comb12_df$pconnect_avg_comb12)
-summary(mod_pconnect_comb12_avg) #Adjusted R-squared:0.9022, p:0.002359
+summary(mod_pconnect_comb12_avg) #Adjusted R-squared:0.900235922, p:0.0
+
+mantel(pconnect_avg_comb12_df$pconnect_avg_comb12, pconnect_avg_comb12_df$pop19_comb12_linfst)
 
 cor.test(pconnect_avg_comb12_df$pconnect_avg_comb12, pconnect_avg_comb12_df$pop19_comb12_linfst, method = 'pearson')
 #cor: -0.9600763, p-value: 0.002359, df=4

@@ -318,13 +318,12 @@ plot(prbi_no19_geodist_km, prbi_no19_11_12_fstlin,
      xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
      main="2009-11-12 No Pop 19 Linearized Fst vs. Geographic Distance", pch=20)
 
-#Add regression to graph
+#Add regression line to graph
 line_no19_11_12 <- line.cis(y=c(prbi_no19_11_12_fstlin), x=c(prbi_no19_geodist_km))
 abline(a=line_no19_11_12$coef[1], b=line_no19_11_12$coef[2], col="red", lwd=1)
 
 #Mantel test
-
-mantel(prbi_no19_geodist_km, prbi_no19_11_12_fstlin) 
+matel(prbi_no19_geodist_km, prbi_no19_11_12_fstlin) 
 #r: 0.1461 p: 0.207
 
 
@@ -353,6 +352,18 @@ mod_EW <- lm(y~x)
 summary(mod_EW)
 #Multiple R-squared: 0.02574, adjusted R-squared: -0.01174, F-statistic 0.6868 on 1 and 26 DF, p-value: 0.4148
 #slope estimate: 1.682e-05, std. error: 2.030e-05, t-value:0.829
+
+##Using over water distance instead of geodist package
+mantel(water_distance, prbi_11_12_EW_fstlin)
+#r: 0.1469, p: 0.261, 999 permutations 
+
+#Linear regression with over water distance
+y <- as.numeric(prbi_11_12_EW_fstlin)
+x <- as.numeric(water_distance)
+mod_EW_waterdist <- lm(y~x)
+summary(mod_EW_waterdist)
+#Multiple R-squared: 0.02157, adjusted R-squared: -0.01606, F-statistic 0.5731 on 1 and 26 DF, p: 0.4558
+#x estimate: 1.355e-05, std error: 1.789e-05
 
 #2009-11-12 data without populations 13, 14, 15, 19, 22 (East-West transect wout 19)
 
@@ -396,7 +407,21 @@ abline(mod_EW_no19, col="red")
 #Mantel test
 
 mantel(prbi_EW_no19_geodist_km, prbi_11_12_EW_no19_fstlin) 
-#r: 0.4951 p: 0.02
+#r: 0.4951 p: 0.02, 5039 permutations
+
+#Mantel test with over water distance
+mantel(water_distance_no19, prbi_11_12_EW_no19_fstlin)
+#r: 0.4563, p: 0.03, 5039 permutations 
+
+#Linear regression with over water distance
+y <- as.numeric(prbi_11_12_EW_no19_fstlin)
+x <- as.numeric(water_distance_no19)
+
+mod_EW_no19_waterdist <- lm(y~x)
+summary(mod_EW_no19_waterdist)
+#Intercept estimate: -1.791e-03, std. error: 1.274e-03, t-value:-1.406, p:0.16751
+#x estimate: 5.393e-05, std error: 1.663e-05, t-value: 3.243, p:0.00239
+#Multiple R-squared: 0.2082, adjusted R-squared: 0.1884, F-statistic 10.52 on 1 and 40 DF, p: 0.002388
 
 
 #Plot Lin Fst vs. Log Geographic Distance

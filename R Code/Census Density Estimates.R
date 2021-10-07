@@ -26,7 +26,7 @@ sum(surv$area[k])/1000 #total area in km2 (=111.2404 km2)
 
 ###########################################################################
 
-#Density estimates for random sites
+#Density estimates for random sites (updated 10/7/21)
 
 ##All random sites
 k = surv$RandomSite == 1
@@ -35,6 +35,54 @@ k = surv$RandomSite == 1
 sum(surv$countPRBI[k])  #28 fish
 
 length(surv$countPRBI[k])
+
+
+##Density estimate at each site
+
+PRBIdens <- data.frame(density=surv$densPRBI[k])
+
+PRBIdens <- subset(PRBIdens, density > 0)
+
+PRBIdens <- PRBIdens$density * 1000000 #convert from fish/m^2 to fish per km^2
+
+hist(PRBIdens) #doesn't look normal
+
+#Just to compare, ran the mean and se to see what the CI would be if we assumed the distribution is normal
+mean(PRBIdens) #634.6966, appears to be skewed by the highest value
+sd(PRBIdens) / sqrt(length(PRBIdens)) #std. error is 240.743, makes 95% CI 393.9536-875.4396
+
+mean(PRBIdens) * 300 / 130 #1464.685 fish/km
+
+
+##Bootstrapping of density estimates
+
+library(boot)
+
+x = as.vector(PRBIdens)
+
+samplemean <- function(x, d) {
+  return(mean(x[d]))
+}
+
+b = boot(x, samplemean, R=1000)
+
+b
+plot(b)
+
+boot.ci(boot.out=b, type="bca") #95% CI 342.6-1352.1
+
+#Multiply CI by reef area (300km^2) and divide by reef length (130 km)
+
+342.6 * 300 / 130 #790.6154 fish/km
+
+1352.1 * 300 / 130 #3120.231 fish/km
+
+
+#####################################################################
+
+
+
+##Old code
 
 #Confidence interval for number of fish
 hist(surv$countPRBI[k]) #does not look normal, will bootstrap instead

@@ -36,10 +36,30 @@ summarizeSigmas(sigmas=s1$sigmas, sg=3) # report distribution for sigma
 
 D1 <- DeFromNb(niter, AL, alpha, Waples_Nb=6942.1, Waples_Nbl95=779.5, Waples_Nbu95=69421, A=130) # estimate De
 s1 <- sigmaFrom_m(De=D1$De, Des=D1$Des, m=m, mse=mse, dims=1) # estimate sigma
-s1$sigma_point # report point value for sigma (8.2577) with df=129
+s1$sigma_point # report point value for sigma (8.2577)
 summarizeSigmas(sigmas=s1$sigmas, sg=3) # report distribution for sigma
 
 #Point value for sigma: 8.257652, mean: 8.33, median: 7.41, SD: 6.36, Lower 95% CI: 2.11, Upper 95% CI: 19.4
+
+
+#With over-water distance, df=3 and Waples_Nbu95=69,421:
+
+# Set parameters
+niter <- 1000000 # number of iterations
+alpha <- 1.678 # minimum age of maturity (for Waples Nb to Ne calculations)
+AL <- 7.052 # adult lifespan (for Waples Nb to Ne calculations)
+A <- 130 # length of reef (km)
+m <- 5.393e-05 # isolation by distance slope (genetic distance/km)
+mse <- 1.663e-05 # standard error on m
+
+D1 <- DeFromNb(niter, AL, alpha, Waples_Nb=6942.1, Waples_Nbl95=779.5, Waples_Nbu95=69421, A=130) # estimate De
+s1 <- sigmaFrom_m(De=D1$De, Des=D1$Des, m=m, mse=mse, dims=1) # estimate sigma
+s1$sigma_point # report point value for sigma (8.891716)
+summarizeSigmas(sigmas=s1$sigmas, sg=3) # report distribution for sigma
+
+#Point value for sigma: 8.891716, mean: 8.55, median: 7.92, SD: 4.79, Lower 95% CI: 2.3, Upper 95% CI: 18.4
+
+
 
 
 	# Using Waples Nb and Migraine estimate of Wright's neighborhood size
