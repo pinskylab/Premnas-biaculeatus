@@ -279,6 +279,14 @@ Fst("PRBI_genepop_2009-11-12.gen.txt", pairs = TRUE, outputFile = "prbi_genepop_
 #Test for Hardy Weinberg
 test_HW("PRBI_genepop_2009-11-12.gen.txt", outputFile="prbi_hw_11-12.txt")
 
+genedivFis(
+    "PRBI_genepop_2009-11-12.gen.txt",
+    sizes = FALSE,
+    outputFile = "prbi_stats_11-12.txt",
+    dataType = "Diploid",
+    verbose = interactive()
+)
+
 #Generate Fst matrix
 prbi_11_12_fst <- read.csv("2009-11-12 All Pop All Loci.csv")
 prbi_11_12_fst <- as.matrix(prbi_11_12_fst)
