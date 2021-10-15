@@ -610,6 +610,19 @@ upperTriangle(water_distance_comb12) <- lowerTriangle(water_distance_comb12, byr
 mantel.partial(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin, water_distance_comb12)
 #Mantel statistic r: -0.4151, p-value: 0.963, 5039 permutations
 
+#Mantel test excluding pops 8, 9, 10
+
+
+pconnect_avg_comb12_no8_9_10_matrix <- pconnect_avg_comb12_matrix[c(-3, -4, -5), c(-3, -4, -5)]
+
+prbi_11_12_comb12_no8_9_10_fstlin <- prbi_11_12_comb12_fstlin[c(-3, -4, -5), c(-3, -4, -5)]
+
+mantel(pconnect_avg_comb12_no8_9_10_matrix, prbi_11_12_comb12_no8_9_10_fstlin)
+#R: -0.6616, p: 0.91667, 23 permutations
+
+plot(pconnect_avg_comb12_no8_9_10_matrix, prbi_11_12_comb12_no8_9_10_fstlin, 
+     xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
+     pch=20)
 
 
 ##Pairwise matrix with pops 1 and 2 Fst combined and release site 2480 for pop 1 and pop 19 excluded##

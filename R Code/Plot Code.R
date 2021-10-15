@@ -46,7 +46,7 @@ ggplot(data=augmented_mod_distanceframe, aes(x=distanceframe$GeographicDistance,
 ggplot(data=distanceframe, aes(x=GeographicDistance, y=GeneticDistance)) +
   geom_point()
 
-#Plot showing populations vs. pop 19
+#Plot showing populations vs. pop 19 in purple and green
 
 pop19 <- tibble(GeographicDistance = as.vector(water_distance[8,]),
                 GeneticDistance = as.vector(prbi_11_12_EW_fstlin[8,]))
@@ -57,6 +57,17 @@ ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance,
   geom_point(color="#7b3294", size=1.75) +
   geom_point(data=pop19, aes(x=GeographicDistance, y=GeneticDistance), color="#008837", size=1.75) +
   geom_smooth(method="lm", color="#7b3294", fill="#c2a5cf") +
+  theme_bw() +
+  xlab("Geographic Distance (km)") +
+  ylab("Genetic Distance (Fst/(1-Fst)")
+
+#Plot showing populations vs. pop 19 with different shapes
+
+ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance, 
+                               y=distanceframe$GeneticDistance)) +
+  geom_point(size=2.5) +
+  geom_point(data=pop19, aes(x=GeographicDistance, y=GeneticDistance), size=2.5, shape=2) +
+  geom_smooth(method="lm", color="black") +
   theme_bw() +
   xlab("Geographic Distance (km)") +
   ylab("Genetic Distance (Fst/(1-Fst)")

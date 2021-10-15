@@ -287,6 +287,8 @@ genedivFis(
     verbose = interactive()
 )
 
+struc("PRBI_genepop_2009-11-12.gen.txt")
+
 #Generate Fst matrix
 prbi_11_12_fst <- read.csv("2009-11-12 All Pop All Loci.csv")
 prbi_11_12_fst <- as.matrix(prbi_11_12_fst)
