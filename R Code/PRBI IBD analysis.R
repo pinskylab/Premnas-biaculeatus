@@ -289,6 +289,19 @@ genedivFis(
 
 struc("PRBI_genepop_2009-11-12.gen.txt")
 
+
+#Get locus stats with poppr package
+
+library(poppr)
+
+read.genalex("PRBI_GenAlEx_2009-11-12.csv")
+
+poppr("PRBI_genepop_2009-11-12.gen")
+
+library(adegenet)
+
+Hs("PRBI_genepop_2009-11-12.gen.txt")
+
 #Generate Fst matrix
 prbi_11_12_fst <- read.csv("2009-11-12 All Pop All Loci.csv")
 prbi_11_12_fst <- as.matrix(prbi_11_12_fst)

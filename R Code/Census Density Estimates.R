@@ -97,7 +97,7 @@ hist(IBD_dens$densPRBI) #doesn't look normal
 IBD_mean <- mean(IBD_dens$densPRBI) #0.0003527602
 IBD_se <- sd(IBD_dens$densPRBI) / sqrt(length(IBD_dens$densPRBI)) #8.297625e-05
 
-IBD_mean *1000000 * 300 / 130 #814 fish/km
+IBD_mean *1000000 * 193 / 130 #524 fish/km
 
 
 ##Bootstrapping of IBD density estimates
@@ -119,9 +119,50 @@ boot.ci(boot.out=b, type="bca") #95% CI 0.0002 - 0.0005
 
 #Convert to square km, then multiply CI by reef area (300km^2) and divide by reef length (130 km)
 
-IBD_lowerCI <- 0.0002 * 1000000 * 300 / 130 #461.5385 fish/km
+IBD_lowerCI <- 0.0002 * 1000000 * 193 / 130 #296.9231 fish/km
 
-IBD_upperCI <- 0.0005 * 1000000 * 300 / 130 #1153.846 fish/km
+IBD_upperCI <- 0.0005 * 1000000 * 193 / 130 #742.3077 fish/km
+
+
+#Density estimate for Cebu (Bohol pops 1 and 2 excluded)
+
+Cebu_dens <- subset(random_surveys, SurveyNum == c(4, 5, 6, 18, 23, 26, 34, 39))
+
+Cebu_dens <- Cebu_dens[-3,]
+
+Cebu_dens$densPRBI #densities at each transect in Cebu (fish/m^2)
+
+hist(Cebu_dens$densPRBI) #doesn't look normal
+
+#Just to compare, ran the mean and se to see what the CI would be if we assumed the distribution is normal
+Cebu_mean <- mean(Cebu_dens$densPRBI) #0.0003514099
+Cebu_se <- sd(Cebu_dens$densPRBI) / sqrt(length(Cebu_dens$densPRBI)) #9.580003e-05
+
+Cebu_mean *1000000 * 68 / 110 #217 fish/km
+
+
+##Bootstrapping of Cebu density estimates
+
+library(boot)
+
+x = as.vector(Cebu_dens$densPRBI)
+
+samplemean <- function(x, d) {
+  return(mean(x[d]))
+}
+
+b = boot(x, samplemean, R=1000)
+
+b
+plot(b)
+
+boot.ci(boot.out=b, type="bca") #95% CI 0.0002 - 0.0005
+
+#Convert to square km, then multiply CI by reef area (193km^2) and divide by reef length (130 km)
+
+Cebu_lowerCI <- 0.0002 * 1000000 * 68 / 110 #123.6364 fish/km
+
+Cebu_upperCI <- 0.0005 * 1000000 * 68 / 110 #309.0909 fish/km
 
 
 

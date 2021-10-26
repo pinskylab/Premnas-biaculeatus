@@ -52,14 +52,24 @@ A <- 130 # length of reef (km)
 m <- 5.393e-05 # isolation by distance slope (genetic distance/km)
 mse <- 1.663e-05 # standard error on m
 
-D1 <- DeFromNb(niter, AL, alpha, Waples_Nb=6942.1, Waples_Nbl95=779.5, Waples_Nbu95=69421, A=130) # estimate De
+D1 <- DeFromNb(niter, AL, alpha, Waples_Nb=6942.1, Waples_Nbl95=779.5, Waples_Nbu95=69421, A=130) # estimate De (58.6325)
 s1 <- sigmaFrom_m(De=D1$De, Des=D1$Des, m=m, mse=mse, dims=1) # estimate sigma
 s1$sigma_point # report point value for sigma (8.891716)
 summarizeSigmas(sigmas=s1$sigmas, sg=3) # report distribution for sigma
 
 #Point value for sigma: 8.891716, mean: 8.55, median: 7.92, SD: 4.79, Lower 95% CI: 2.3, Upper 95% CI: 18.4
 
+#95% CI for De
+Del95 = quantile(Des, 0.025) #49.75894
+Deu95 = quantile(Des, 0.975) #74.81362
 
+#Mean and se for De
+
+de_mean <- mean(Des) #61.59
+de_se <- sd(Des) / sqrt(length(Des)) #2.835
+
+de_mean + 1.96*de_se #67.15
+de_mean - 1.96*de_se #56.04
 
 
 	# Using Waples Nb and Migraine estimate of Wright's neighborhood size

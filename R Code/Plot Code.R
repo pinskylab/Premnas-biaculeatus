@@ -63,6 +63,17 @@ ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance,
 
 #Plot showing populations vs. pop 19 with different shapes
 
+#Point and filled triangle
+ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance, 
+                               y=distanceframe$GeneticDistance)) +
+  geom_point(size=2.5) +
+  geom_point(data=pop19, aes(x=GeographicDistance, y=GeneticDistance), size=2.5, shape=17) +
+  geom_smooth(method="lm", color="black") +
+  theme_bw() +
+  xlab("Geographic Distance (km)") +
+  ylab("Genetic Distance (Fst/(1-Fst)")
+
+#Point and blank triangle
 ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance, 
                                y=distanceframe$GeneticDistance)) +
   geom_point(size=2.5) +
@@ -71,6 +82,41 @@ ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance,
   theme_bw() +
   xlab("Geographic Distance (km)") +
   ylab("Genetic Distance (Fst/(1-Fst)")
+
+#Point and circle
+ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance, 
+                               y=distanceframe$GeneticDistance)) +
+  geom_point(size=3) +
+  geom_point(data=pop19, aes(x=GeographicDistance, y=GeneticDistance), size=3, shape=1) +
+  geom_smooth(method="lm", color="black") +
+  theme_bw() +
+  xlab("Geographic Distance (km)") +
+  ylab("Genetic Distance (Fst/(1-Fst)")
+
+#Point and blank squares
+
+ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance, 
+                               y=distanceframe$GeneticDistance)) +
+  geom_point(size=2.5) +
+  geom_point(data=pop19, aes(x=GeographicDistance, y=GeneticDistance), size=2.5, shape=0) +
+  geom_smooth(method="lm", color="black") +
+  theme_bw() +
+  xlab("Geographic Distance (km)") +
+  ylab("Genetic Distance (Fst/(1-Fst)")
+
+#Point and filled squares
+ggplot(data=distanceframe, aes(x=distanceframe$GeographicDistance, 
+                               y=distanceframe$GeneticDistance)) +
+  geom_point(size=2.5) +
+  geom_point(data=pop19, aes(x=GeographicDistance, y=GeneticDistance), size=2.5, shape=15) +
+  geom_smooth(method="lm", color="black") +
+  theme_bw() +
+  xlab("Geographic Distance (km)") +
+  ylab("Genetic Distance (Fst/(1-Fst)")
+
+
+
+
 
 #Data Tables
 
