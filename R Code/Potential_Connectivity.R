@@ -692,7 +692,7 @@ ggplot(data=pconnectframe_comb12, aes(x=PConnect,
                                       y=GeneticDistance)) +
   geom_point(size=2.5) +
   geom_point(data=pop19_comb12, aes(x=PConnect, y=GeneticDistance), size=3, shape=1) +
-  geom_smooth(data=pop19_comb12, method="lm", se=FALSE, color="black") +
+  geom_smooth(data=pop19_comb12, method="lm", se=FALSE, color="black", linetype="dotted", size=1) +
   theme_bw() +
   xlab("Potential Connectivity") +
   ylab("Genetic Distance (Fst/(1-Fst)")

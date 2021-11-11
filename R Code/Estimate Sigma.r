@@ -150,3 +150,23 @@ Nb_adj  #7302.201
 
 Ne <- Nb_adj / Nb_Ne
 Ne #7625.296
+Ne/130 #58.65613
+
+
+##Correcting lower and upper bounds of confidence interval
+
+Nbl <- 779.5
+Nb_adj <- Nbl / (1.26 - 0.323 * Nb_Ne)
+Nb_adj #819.9342
+
+Nel <- Nb_adj / Nb_Ne
+Nel #856.2133
+Nel/130 #6.586256
+
+Nbu <- 69421
+Nb_adj <- Nbu / (1.26 - 0.323 * Nb_Ne)
+Nb_adj #73022.01
+
+Neu <- Nb_adj / Nb_Ne
+Neu #76252.96
+Neu/130 #586.5613
