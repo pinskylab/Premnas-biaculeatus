@@ -1,306 +1,26 @@
 #Premnas biaculeatus Genotypes and Analysis
 
 library(genepop)
-
-##Read in data
-
-prbi_genalex = read.csv("PRBI_GenAlEx_2009-11-12.csv")
-prbi_genepop = read.csv("PRBI_2009-09-07.txt")
-
-##Test for Hardy-Weinberg Equilibrium
-
-test_HW("PRBI_2009-09-07.txt", outputFile="prbi_hw.txt")
-
-#HW test results in file "prbi_hw.txt"
-
-
-##Calculate pairwise Fst between populations
-#pairs=TRUE to get a pairwise Fst matrix
-
-Fst("PRBI_2009-09-07.txt", pairs = TRUE, outputFile = "prbi_genepop_fst.csv", 
-    dataType = "Diploid", verbose = interactive())
-
-#Resulting Fst matrices found in "prbi_genepop_fst.csv" and "prbi_genepop_fst.csv.MIG" 
-
-
-##Calculate geographic distances between populations using geodist package
-
-install.packages("geodist")
 library(geodist)
-install.packages("tidyverse")
 library(tidyverse)
 
-#Import avg. lat and long from csv file
-
-prbi_avglatlong <- read.csv("PRBI_AvgLatLong.csv")
-
-#Rename and reorder columns
-prbi_avglatlong <- rename(prbi_avglatlong, latitude = Avg..Latitude, 
-                                longitude = Avg..Longitude)
-
-prbi_avglatlong <- prbi_avglatlong[c("longitude", "latitude", "Population")]
-
-prbi_avglatlong_matrix <- as.matrix(prbi_avglatlong)
-
-#Use geodist function to calculate distances (output is in meters)
-#Getting error- says it can't determine longitude and latitude columns
-prbi_distance_meters <- geodist(prbi_avglatlong, measure="geodesic")
-
-#Use vector version of Geodist instead
-#Create vector for longitude and latitude of populations from prbi_avglatlong
-#Listed in sequential order of populations from pop 1-pop 22
-
-prbi_long <- prbi_avglatlong$longitude
-prbi_long
-
-prbi_lat <- prbi_avglatlong$latitude
-prbi_lat
-
-#Use geodist_vec to calculate pairwise distances
-#Outputs matrix of geodesic distances in meters- labeled as prbi_geodistance_meters
-
-prbi_geodistance_meters <- geodist_vec(prbi_long, prbi_lat, paired=FALSE, sequential=FALSE,
-            pad=FALSE, measure="geodesic")
-prbi_geodistance_meters 
-
-#Convert geographic distance from meters to kilometers
-
-prbi_geodistance_km <- prbi_geodistance_meters/1000
-prbi_geodistance_km
-
-#Relabel matrix columns and rows to be Populations 1-22
-rownames(prbi_geodistance_km) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
-colnames(prbi_geodistance_km) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
-prbi_geodistance_km
-
-#Remove diagonals/upper triangle of the geographic distance matrix
-prbi_geodistance_km[upper.tri(prbi_geodistance_km, diag=T)] = NA
-
-
-
-##Fst of all populations and all loci
-#Trying different ways of loading in the fst matrix to have less formatting issues
-#None worked so far
-prbi_txt_fst <- read.table("prbi_genepop_fst.txt.MIG", header=T, skip=3, sep="")
-
-library(data.table)
-prbi_txt_fst <- fread("prbi_genepop_fst.txt.MIG")
-
-prbi_txt_fst <- read.table("prbi_genepop_fst.csv", skip=270, sep="")
-
-#Load in Fst matrix and edit formatting to match prbi_geodistance_km
-prbi_fst <- read.csv("prbi_genepop_fst.csv.MIG")
-prbi_fst <- as.matrix(prbi_fst)
-
-#Delete unneeded rows 1, 2, and 14
-prbi_fst <- prbi_fst[c(-1, -2, -14)]
-#still have the issue of only one column holding all the Fst values
-
-#Instead will import a csv file that has the Fst values in appropriate columns
-prbi_fst <- read.csv("Pairwise Fst Matrix.csv")
-prbi_fst <- as.matrix(prbi_fst)
-prbi_fst <- prbi_fst[,-1]
-
-colnames(prbi_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
-rownames(prbi_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
-
-##Linearize Fst and Plot Linear Fst vs. Geographic Distance
-
-#Linearize Fst (Fst/(1-Fst))
-prbi_fstlin = as.matrix(prbi_fst/(1-prbi_fst))
-
-#Plot Linear Fst vs. Geographic Distance
-plot(prbi_geodistance_km, prbi_fstlin, ylim=c(-0.25, 0.25), 
-     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="Linearized Fst vs. Geographic Distance", pch=20)
-
-#Add regression to graph
-library(smatr)
-
-line_all <- line.cis(y=c(prbi_fstlin), x=c(prbi_geodistance_km))
-abline(a=line_all$coef[1], b=line_all$coef[2], col="red", lwd=1)
-
-#Mantel test
-
-library(vegan)
-mantel(prbi_geodistance_km, prbi_fstlin) 
-#r: 0.1563 p: 0.146
-
-##Excluding ACHB9
-
-##Calculate pairwise Fst between populations- using Genepop file excluding ACHB9
-#pairs=TRUE to get a pairwise Fst matrix
-
-Fst("PRBI_2009-09-07_noACH_B9.txt", pairs = TRUE, outputFile = "prbi_genepop_noACHB9_fst.csv", 
-    dataType = "Diploid", verbose = interactive())
-
-#Resulting Fst matrices found in "prbi_genepop_noACHB9_fst.csv" and "prbi_genepop_noACHB9_fst.csv.MIG" 
-
-#Create matrix for Fst excluding ACHB9
-prbi_noACHB9_fst <- read.csv("All Pop No ACHB9 Fst Matrix.csv")
-prbi_noACHB9_fst <- as.matrix(prbi_noACHB9_fst)
-prbi_noACHB9_fst <- prbi_noACHB9_fst[,-1]
-
-colnames(prbi_noACHB9_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
-rownames(prbi_noACHB9_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
-
-##Linearize Fst and Plot Linear Fst vs. Geographic Distance
-
-#Linearize Fst (Fst/(1-Fst))
-prbi_noACHB9_fstlin = as.matrix(prbi_noACHB9_fst/(1-prbi_noACHB9_fst))
-
-#Plot Linear Fst vs. Geographic Distance
-plot(prbi_geodistance_km, prbi_noACHB9_fstlin, 
-     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="All Pop No ACHB9 Linearized Fst vs. Geographic Distance", pch=20)
-
-#Add regression to graph
-
-line_noACHB9 <- line.cis(y=c(prbi_noACHB9_fstlin), x=c(prbi_geodistance_km))
-abline(a=line_noACHB9$coef[1], b=line_noACHB9$coef[2], col="red", lwd=1)
-
-#Mantel test
-
-mantel(prbi_geodistance_km, prbi_noACHB9_fstlin) 
-#r: 0.1546 p: 0.167
-
-
-##Excluding Population 19
-
-#Create geographic distance matrix that excludes population 19
-
-#Exclude pop 19 from the avg. lat long dataframe
-prbi_no19_avglatlong <- prbi_avglatlong[-c(11),]
-
-#Create vector for longitude and latitude of populations from prbi_no19_avglatlong
-#Listed in sequential order of populations from pop 1-pop 22
-prbi_no19_long <- prbi_no19_avglatlong$longitude
-prbi_no19_long
-
-prbi_no19_lat <- prbi_no19_avglatlong$latitude
-prbi_no19_lat
-
-#Use geodist_vec to calculate pairwise distances
-#Outputs matrix of geodesic distances in meters- labeled as prbi_no19_geodist_meters
-library(geodist)
-
-prbi_no19_geodist_meters <- geodist_vec(prbi_no19_long, prbi_no19_lat, paired=FALSE, sequential=FALSE,
-                                       pad=FALSE, measure="geodesic")
-prbi_no19_geodist_meters 
-
-#Convert geographic distance from meters to kilometers
-
-prbi_no19_geodist_km <- prbi_no19_geodist_meters/1000
-prbi_no19_geodist_km
-
-#Relabel matrix columns and rows to be Populations 1-22
-rownames(prbi_no19_geodist_km) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 22)
-colnames(prbi_no19_geodist_km) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 22)
-prbi_no19_geodist_km
-
-#Remove diagonals/upper triangle of the geographic distance matrix
-prbi_no19_geodist_km[upper.tri(prbi_no19_geodist_km, diag=T)] = NA
-
-
-#Generate Fst matrices excluding population 19 and excluding ACHB9:
-
-##Calculate pairwise Fst between populations- using Genepop file excluding pop 19 and ACHB9
-#pairs=TRUE to get a pairwise Fst matrix
-library(genepop)
-
-Fst("PRBI_2009-09-07_no19_noACH_B9.txt", pairs = TRUE, outputFile = "prbi_genepop_no19_noACHB9_fst.csv", 
-    dataType = "Diploid", verbose = interactive())
-
-#Resulting Fst matrices found in "prbi_genepop_no19_noACHB9_fst.csv" and "prbi_genepop_no19_noACHB9_fst.csv.MIG" 
-
-#Create matrix for Fst excluding ACHB9
-prbi_no19_noACHB9_fst <- read.csv("No 19 No ACHB9 Fst Matrix.csv")
-prbi_no19_noACHB9_fst <- as.matrix(prbi_no19_noACHB9_fst)
-prbi_no19_noACHB9_fst <- prbi_no19_noACHB9_fst[,-1]
-
-colnames(prbi_no19_noACHB9_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 22)
-rownames(prbi_no19_noACHB9_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 22)
-
-##Linearize Fst and Plot Linear Fst vs. Geographic Distance
-
-#Linearize Fst (Fst/(1-Fst))
-prbi_no19_noACHB9_fstlin = as.matrix(prbi_no19_noACHB9_fst/(1-prbi_no19_noACHB9_fst))
-
-#Faster way to exclude pop 19 from the Fst matrix (delete the row and column where pop 19 data is):
-prbi_no19_noACHB9_fstlin <- prbi_noACHB9_fstlin[-11, -11]
-
-#Plot Linear Fst vs. Geographic Distance
-plot(prbi_no19_geodist_km, prbi_no19_noACHB9_fstlin, 
-     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="No Pop 19 No ACHB9 Linearized Fst vs. Geographic Distance", pch=20)
-
-#Add regression to graph
-
-line_no19_noACHB9 <- line.cis(y=c(prbi_no19_noACHB9_fstlin), x=c(prbi_no19_geodist_km))
-abline(a=line_no19_noACHB9$coef[1], b=line_no19_noACHB9$coef[2], col="red", lwd=1)
-
-#Mantel test
-
-mantel(prbi_no19_geodist_km, prbi_no19_noACHB9_fstlin) 
-#r: 0.09557 p: 0.306
-
-
-##Excluding population 19 but with all loci:
-prbi_no19_fstlin <- prbi_fstlin[-11, -11]
-
-#Plot Linear Fst vs. Geographic Distance
-plot(prbi_no19_geodist_km, prbi_no19_fstlin, 
-     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="No Pop 19 Linearized Fst vs. Geographic Distance", pch=20)
-
-#Add regression to graph
-
-line_no19 <- line.cis(y=c(prbi_no19_fstlin), x=c(prbi_no19_geodist_km))
-abline(a=line_no19$coef[1], b=line_no19$coef[2], col="red", lwd=1)
-
-#Mantel test
-
-mantel(prbi_no19_geodist_km, prbi_no19_fstlin) 
-#r: 0.1158 p: 0.242
-
-
-
-##Trial with a different Genepop input file found on GitHub:
-#File "PRBI_genepop_2009-11-12.gen"
-
-##Calculate pairwise Fst between populations
+##Calculate pairwise Fst between populations, input file from "Downloaded_Data" folder
 #pairs=TRUE to get a pairwise Fst matrix
 
 Fst("PRBI_genepop_2009-11-12.gen.txt", pairs = TRUE, outputFile = "prbi_genepop_2009-11-12_fst.csv", 
     dataType = "Diploid", verbose = interactive())
 
 #Results in prbi_genepop_2009-11-12_fst.csv and prbi_genepop_2009-11-12_fst.csv.MIG
+#Output file located in "Genepop_Outputs" folder
 
-#Test for Hardy Weinberg
+#Resulting Fst matrix was copied into Microsoft Excel and saved as "2009-11-12 All Pop All Loci.csv" and
+#located in "Fst_Matrices" folder
+
+
+#Test for Hardy Weinberg, input file from "Downloaded_Data" folder
 test_HW("PRBI_genepop_2009-11-12.gen.txt", outputFile="prbi_hw_11-12.txt")
+#Output file located in "Genepop_Outputs" folder
 
-genedivFis(
-    "PRBI_genepop_2009-11-12.gen.txt",
-    sizes = FALSE,
-    outputFile = "prbi_stats_11-12.txt",
-    dataType = "Diploid",
-    verbose = interactive()
-)
-
-struc("PRBI_genepop_2009-11-12.gen.txt")
-
-
-#Get locus stats with poppr package
-
-library(poppr)
-
-read.genalex("PRBI_GenAlEx_2009-11-12.csv")
-
-poppr("PRBI_genepop_2009-11-12.gen")
-
-library(adegenet)
-
-Hs("PRBI_genepop_2009-11-12.gen.txt")
 
 #Generate Fst matrix
 prbi_11_12_fst <- read.csv("2009-11-12 All Pop All Loci.csv")
@@ -310,73 +30,37 @@ prbi_11_12_fst <- prbi_11_12_fst[,-1]
 colnames(prbi_11_12_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
 rownames(prbi_11_12_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
 
+
 ##Linearize Fst and Plot Linear Fst vs. Geographic Distance
 
 #Linearize Fst (Fst/(1-Fst))
 prbi_11_12_fstlin = as.matrix(prbi_11_12_fst/(1-prbi_11_12_fst))
 
-#Plot Linear Fst vs. Geographic Distance
-plot(prbi_geodistance_km, prbi_11_12_fstlin,
-     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="2009-11-12 Linearized Fst vs. Geographic Distance", pch=20)
 
-#Add regression to graph
-library(smatr)
+##Loading in over water distance matrix
+#Calculated using the Google Earth measure tool as the shortest distance between 2 sampling sites
+#that does not cross land, distances input into "OverWater_Distance.csv" file located in "Coordinates_Distances" folder
 
-line_11_12_all <- line.cis(y=c(prbi_11_12_fstlin), x=c(prbi_geodistance_km))
-abline(a=line_11_12_all$coef[1], b=line_11_12_all$coef[2], col="red", lwd=1)
+#Load in matrix with over water distances
 
-#Mantel test
+water_distance <- read.csv("OverWater_Distance.csv")
+water_distance <- as.matrix(water_distance)
+water_distance <- water_distance[, -1]
+colnames(water_distance) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+rownames(water_distance) <- c(1, 2, 7, 8, 9, 10, 11, 19)
+
+#Make matrix symmetrical
+upperTriangle(water_distance) <- lowerTriangle(water_distance, byrow=TRUE)
 
 library(vegan)
-mantel(prbi_geodistance_km, prbi_11_12_fstlin) 
-#r: 0.189 p: 0.11
-
-
-#2009-11-12 data without population 19:
-
-prbi_no19_11_12_fstlin <- prbi_11_12_fstlin[-11, -11]
-
-plot(prbi_no19_geodist_km, prbi_no19_11_12_fstlin, 
-     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="2009-11-12 No Pop 19 Linearized Fst vs. Geographic Distance", pch=20)
-
-#Add regression line to graph
-line_no19_11_12 <- line.cis(y=c(prbi_no19_11_12_fstlin), x=c(prbi_no19_geodist_km))
-abline(a=line_no19_11_12$coef[1], b=line_no19_11_12$coef[2], col="red", lwd=1)
-
-#Mantel test
-matel(prbi_no19_geodist_km, prbi_no19_11_12_fstlin) 
-#r: 0.1461 p: 0.207
-
 
 #2009-11-12 data without populations 13, 14, 15, 22 (East-West transect)
+#Pops 13, 14, 15, and 22 were excluded due to all having a sample size less than 5 individuals
 
 prbi_11_12_EW_fstlin <- prbi_11_12_fstlin[c(-8, -9, -10, -12), c(-8, -9, -10, -12)]
 
-prbi_EW_geodist_km <- prbi_geodistance_km[c(-8, -9, -10, -12), c(-8, -9, -10, -12)]
-
-plot(prbi_EW_geodist_km, prbi_11_12_EW_fstlin, 
-     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="2009-11-12 No Pops 13-15, 22 Linearized Fst vs. Geographic Distance", pch=20)
-
-#Add regression to graph
-line_11_12_EW <- line.cis(y=c(prbi_11_12_EW_fstlin), x=c(prbi_EW_geodist_km))
-abline(a=line_11_12_EW$coef[1], b=line_11_12_EW$coef[2], col="red", lwd=1)
 
 #Mantel test
-
-mantel(prbi_EW_geodist_km, prbi_11_12_EW_fstlin) 
-#r: 0.1604 p: 0.235
-
-y <- as.numeric(prbi_11_12_EW_fstlin)
-x <- as.numeric(prbi_EW_geodist_km)
-mod_EW <- lm(y~x)
-summary(mod_EW)
-#Multiple R-squared: 0.02574, adjusted R-squared: -0.01174, F-statistic 0.6868 on 1 and 26 DF, p-value: 0.4148
-#slope estimate: 1.682e-05, std. error: 2.030e-05, t-value:0.829
-
-##Using over water distance instead of geodist package
 mantel(water_distance, prbi_11_12_EW_fstlin)
 #r: 0.1469, p: 0.261, 999 permutations 
 
@@ -388,49 +72,16 @@ summary(mod_EW_waterdist)
 #Multiple R-squared: 0.02157, adjusted R-squared: -0.01606, F-statistic 0.5731 on 1 and 26 DF, p: 0.4558
 #x estimate: 1.355e-05, std error: 1.789e-05
 
-#2009-11-12 data without populations 13, 14, 15, 19, 22 (East-West transect wout 19)
+plot(water_distance, prbi_11_12_EW_fstlin, 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)")
+abline(mod_EW_waterdist, col="red")
+
+
+#Excluding sites 13, 14, 15, 19, and 22, as 19 does not appear to follow an IBD pattern when plotted
 
 prbi_11_12_EW_no19_fstlin <- prbi_11_12_EW_fstlin[-8, -8]
 
-prbi_EW_no19_geodist_km <- prbi_EW_geodist_km[-8, -8]
-
-plot(prbi_EW_no19_geodist_km, prbi_11_12_EW_no19_fstlin, 
-     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="2009-11-12 No Pops 13-15, 19, 22 Linearized Fst vs. Geographic Distance", pch=20)
-
-#Add SMA regression to graph
-line_11_12_EW_no19 <- line.cis(y=c(prbi_11_12_EW_no19_fstlin), x=c(prbi_EW_no19_geodist_km))
-abline(a=line_11_12_EW_no19$coef[1], b=line_11_12_EW_no19$coef[2], col="red", lwd=1)
-
-#Run linear regression
-y <- as.numeric(prbi_11_12_EW_no19_fstlin)
-x <- as.numeric(prbi_EW_no19_geodist_km)
-y
-x
-class(y)
-class(x)
-
-mod_EW_no19 <- lm(y~x)
-summary(mod_EW_no19)
-#Intercept: Estimate= -2.272e-03, Std. Error= 1.866e-03, t value= -1.218, p value= 0.2383
-#x Estimate= 6.253e-05, Std. Error 2.518e-05, t value=2.484, p-value=0.0225
-
-#Multiple R-squared= 0.2451, Adjusted R-squared= 0.2054, F-Statistic=6.168 on 1 and 19 DF,
-#p-value=0.0225
-
-coef(mod_EW_no19)
-confint(mod_EW_no19)
-
-#Add linear regression to plot
-plot(prbi_EW_no19_geodist_km, prbi_11_12_EW_no19_fstlin, 
-     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="2009-11-12 No Pops 13-15, 19, 22 Linearized Fst vs. Geographic Distance", pch=20)
-abline(mod_EW_no19, col="red")
-
-#Mantel test
-
-mantel(prbi_EW_no19_geodist_km, prbi_11_12_EW_no19_fstlin) 
-#r: 0.4951 p: 0.02, 5039 permutations
+water_distance_no19 <- water_distance[-8, -8]
 
 #Mantel test with over water distance
 mantel(water_distance_no19, prbi_11_12_EW_no19_fstlin)
@@ -446,49 +97,43 @@ summary(mod_EW_no19_waterdist)
 #x estimate: 5.393e-05, std error: 1.663e-05, t-value: 3.243, p:0.00239
 #Multiple R-squared: 0.2082, adjusted R-squared: 0.1884, F-statistic 10.52 on 1 and 40 DF, p: 0.002388
 
+plot(water_distance_no19, prbi_11_12_EW_no19_fstlin, 
+     xlab="Pairwise Geographic Distance (km)", ylab="Fst/(1-Fst)")
+abline(mod_EW_no19_waterdist, col="red")
 
-#Plot Lin Fst vs. Log Geographic Distance
 
-plot(log(prbi_EW_no19_geodist_km), prbi_11_12_EW_no19_fstlin, 
-     xlab="Natural Log of Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="2009-11-12 No Pops 13-15, 19, 22 Linearized Fst vs. Log of Geographic Distance", pch=20)
+#Plotting geographic distance vs. genetic distance, showing pop 19 in circles
 
-#Run linear regression
-y <- as.numeric(prbi_11_12_EW_no19_fstlin)
-xlog <- as.numeric(log(prbi_EW_no19_geodist_km))
-y
-xlog
-class(y)
-class(xlog)
+distanceframe <- tibble(GeneticDistance=as.vector(prbi_11_12_EW_no19_fstlin), 
+                        WaterDistance=as.vector(water_distance_no19))
+distanceframe <- drop_na(distanceframe)
 
-mod_EW_no19_log <- lm(y~xlog)
-summary(mod_EW_no19_log)
-#Intercept: Estimate= -0.009870, Std. Error= 0.005673, t value= -1.74, p value= 0.0980
-#xlog Estimate= 0.002917, Std. Error 0.001395, t value=2.09, p-value=0.0503
+pop19 <- tibble(WaterDistance = as.vector(water_distance[8,]),
+                GeneticDistance = as.vector(prbi_11_12_EW_fstlin[8,]))
+pop19 <- drop_na(pop19)
 
-#Multiple R-squared= 0.187, Adjusted R-squared= 0.1442, F-Statistic=4.37 on 1 and 19 DF,
-#p-value=0.05026
-
-coef(mod_EW_no19_log)
-confint(mod_EW_no19_log)
-
-#Add linear regression to plot
-plot(log(prbi_EW_no19_geodist_km), prbi_11_12_EW_no19_fstlin, 
-     xlab="Natural Log of Geographic Distance (km)", ylab="Fst/(1-Fst)", 
-     main="2009-11-12 No Pops 13-15, 19, 22 Linearized Fst vs. Log of Geographic Distance", pch=20)
-abline(mod_EW_no19_log, col="red")
-
-#Mantel test
-
-mantel(log(prbi_EW_no19_geodist_km), prbi_11_12_EW_no19_fstlin) 
-#r: 0.4324 p: 0.011
+ggplot(data=distanceframe, aes(x=distanceframe$WaterDistance, 
+                               y=distanceframe$GeneticDistance)) +
+    geom_point(size=2.5) +
+    geom_point(data=pop19, aes(x=WaterDistance, y=GeneticDistance), size=3, shape=1) +
+    geom_smooth(method="lm", color="black") +
+    theme_bw() +
+    xlab("Geographic Distance (km)") +
+    ylab("Genetic Distance (Fst/(1-Fst)")
 
 
 
 #Calculating Fst with pops 1 and 2 combined as a population
+#This was needed for the potential connectivity analyses, as sites 1 and 2 were too close
+#together for two distinct particle release sites to be identified
+#Input file from "Data" folder
 
 Fst("PRBI_genepop_2009-11-12_comb12.gen.txt", pairs = TRUE, outputFile = "prbi_genepop_2009-11-12_comb12_fst.txt", 
     dataType = "Diploid", verbose = interactive())
+#Output file located in "Genepop_Outputs" folder
+
+#Resulting matrix copied into Microsoft Excel and saved as "2009-11-12_comb12_FstMatrix.csv" and located in
+#"Fst_Matrices" folder
 
 #Generate Fst matrix
 prbi_11_12_comb12_fst <- read.csv("2009-11-12_comb12_FstMatrix.csv", header=TRUE)
@@ -501,67 +146,6 @@ rownames(prbi_11_12_comb12_fst) <- c(1, 7, 8, 9, 10, 11, 19)
 #Linearize Fst (Fst/(1-Fst))
 prbi_11_12_comb12_fstlin = as.matrix(prbi_11_12_comb12_fst/(1-prbi_11_12_comb12_fst))
 
-
-
-
-
-#Mapping the populations
-library(maps)
-library(mapdata)
-#Pull up map of Cebu and Leyte
-map(database="world", xlim=c(123, 126), ylim=c(9, 11.5), col="gray", fill=TRUE)
-#Add points to the map, representing each population
-points(prbi_avglatlong$longitude, prbi_avglatlong$latitude, pch=19, col=1:12)
-legend("right", legend=c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22), fill=1:12, col=1:12)
-
-#ggmap requires a google api key
-register_google(key="")
-library(ggmap)
-prbi_map <- get_map(location=c(lon=124, lat=10))
-
-
-
-##Trialing different Genepop Fst function inputs
-
-#Trial 1
-#pairs=TRUE, the rest are the defaults
-
-Fst("PRBI_genepop_2009-11-12.gen.txt", pairs = TRUE, outputFile = "prbi_genepop_2009-11-12_fst.csv", 
-    dataType = "Diploid", verbose = interactive())
-
-#Results in prbi_genepop_2009-11-12_fst.csv and prbi_genepop_2009-11-12_fst.csv.MIG
-#Matches "PRBI_11_12_fsts.csv" from GitHub
-
-#Trial 2- all defaults
-
-Fst("PRBI_genepop_2009-11-12.gen.txt",outputFile = "prbi_genepop_defaults_fst.csv")
-
-#With all defaults, it does not generate pairwise matrices
-
-#Trial 3- pairs=TRUE and sizes=TRUE
-
-Fst("PRBI_genepop_2009-11-12.gen.txt", sizes=TRUE, pairs = TRUE, outputFile = "prbi_genepop_sizestrue_fst.csv")
-#Does not match "PRBI_11_12_fsts.csv" from GitHub
-
-
-
-
-##Extra/unused:
-##IBD analysis using Genepop function
-library(genepop)
-
-#Tried this but R aborted and terminated
-#Not sure on the format of the input file
-ibd("prbi_genepop_ibdinput.txt", outputFile="prbi_genepop_ibdanalysis.txt", 
-    dataType="Diploid", statistic="F/(1-F)", geographicScale="1D", CIcoverage=0.95,
-    testPoint=0, mantelPermutations=1000, verbose = interactive())
-
-#Trying a version of the ibd function that allows a geo distance matrix
-#Error- unused argument geoDistFile- didn't take it as an input
-ibd("PRBI_2009-09-07.txt", geoDistFile="prbi_genepop_geomatrix.txt", 
-    outputFile="prbi_genepop_ibdanalysis.txt", dataType="Diploid", 
-    statistic="F/(1-F)", geographicScale="1D", CIcoverage=0.95,
-    testPoint=0, mantelPermutations=1000, verbose = interactive())
 
 
 
