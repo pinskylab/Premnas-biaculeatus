@@ -28,3 +28,9 @@ Data: data files that have been formatted or manipulated by authors, in addition
    
    "PRBI_genepop_2009-11-12_comb12.gen.txt" genotypes for all Premnas biaculeatus individuals at 16 microsatellite loci in Genepop format. All individuals previously in sites 1 and 2 are combined into one population. Used as the input file for Fst calculations for the potential connectivity analyses.
      
+R_Code: R scripts used for data analysis under the RProject file "Premnas-biaculeatus.RProj"
+
+     "PRBI_IBD_Analysis.R" calculations of pairwise Fst matrices, testing for Hardy-Weinberg, running Mantel tests to test for IBD patterns, plots of geographic vs. genetic distance
+     "Potential_Connectivity.R" identifies release sites for each sampling site from Thompson et al. 2018, tests for correlations between potential connectivity and genetic differentiation
+     "Census_Density_Estimates.R" calculates census density for the IBD study region and bootstraps estimates to generate 95% confidence intervals
+     "Estimate_Sigma" error propagation for estimates of density and IBD slope (m). Sources scripts from "Scripts for Sigma Estimates" folder. 
