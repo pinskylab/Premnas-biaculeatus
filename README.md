@@ -13,3 +13,18 @@ Downloaded_Data: raw data files, unmanipulated by the authors.
      "surveys2009-09-23.density.csv" number of anemonefish, including Premnas biaculeatus, found at sampling sites in the central Philippines. Used for census density                 calculations.
     
  
+Data: data files that have been formatted or manipulated by authors, in addition to output files from running Genepop functions in RStudio. Contains 3 subfolders:
+
+    Coordinates_Distances: files with the distances between sampling sites and the coordinates of the sampling sites. 
+        "OverWater_Comb12_Distance.csv" matrix of pairwise over-water distance (measured in Google Earth as the distance between two sampling sites that does not cross land), with sites 1 and 2 combined due to only one particle release site corresponding to both sites. Used in "Potential_Connectivity.R" script
+     "OverWater_Distance.csv" matrix of pairwise over-water distance (measured in Google Earth as the distance between two sampling sites that does not cross land), used in "PRBI_IBD_Analysis.R" and "Potential_Connectivity.R" scripts
+     "PRBI_AvgLatLong.csv" and "PRBI_Comb12_AvgLatLong" gives average latitude and longitude for individuals found at each sampling site, "PRBI_Comb12_AvgLatLong" combines populations 1 and 2 as run in the potential connectivity analyses.
+     
+     Fst_Matrices: Copies of Genepop pairwise Fst outputs in a .csv matrix format that can be loaded in RStudio. "2009-11-12 All Pop All Loci" pairwise Fst of all populations at all 16 loci. "2009-11-12_comb12_FstMatrix" pairwise Fst with populations 1 and 2 combined for potential connectivity analyses. 
+     
+   Genepop_Outputs: Outputs of Genepop pairwise Fst and Hardy-Weinberg functions. See "PRBI_IBD_Analysis.R" script for corresponding input files and code.
+   
+   Ne_Estimator: Inputs and output files from running NeEstimator (Do et al. 2014) for all sites in the IBD study region grouped together as 1 cohort with a pcrit of 0.02 and a monogamous mating model. "PRBI_genpop_1cohort_PopsExcluded.gen.txt" is the input file. "PRBI_genpop_1cohort_PopsExcluded.genNe.txt" gives the output Nb (Number of breeders) estimates and "PRBI_genpop_1cohort_PopsExcluded.genNoDat.txt" gives a summary of any loci with no data for any individuals.
+   
+   "PRBI_genepop_2009-11-12_comb12.gen.txt" genotypes for all Premnas biaculeatus individuals at 16 microsatellite loci in Genepop format. All individuals previously in sites 1 and 2 are combined into one population. Used as the input file for Fst calculations for the potential connectivity analyses.
+     
