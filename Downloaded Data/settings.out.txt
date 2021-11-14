@@ -1,0 +1,46 @@
+
+=============================================
+This is Migraine version 0.5.4 (Built on Jun 11 2018 at 11:38:19).
+Likelihood analysis of genetic data
+based on the de Iorio & Griffiths algorithms.
+=============================================
+Local operating system is Windows
+with 1 core allocated for R analyses.
+=============================================
+Statistical model:
+Linear lattice with absorbing boundaries.
+Geometric dispersal model;
+Symmetric K-alleles mutation model
+   (theta parameter excludes k->k mutations).
+=============================================
+Algorithm:
+Importance Sampling.
+=============================================
+Sample:
+Genepop file name: C:/Users/kyras/OneDrive/Documents/GitHub/Premnas-biaculeatus/Downloaded
+ (Write/Read ad hoc files? Write: false; Read: false)
+Number of loci as given by Genepop file (more info below)
+=============================================
+Parameter (Mutation rate, relative population sizes and dispersal rates) space explored:
+Mutation and dispersal rates scaled by deme size
+*** (Initial) parameter range *** (2 Nh u, 2 Nh m, g
+lower bound: 0.001 0.001 0 
+upper bound: 100 100 1 
+=============================================
+Numerical options:
+Pi computation by iterative algorithm (PCG) if >=60 demes;
+Migraine computation and kriging (once).
+=============================================
+Kriging: 
+The blackbox R package will be used.
+Matern covariance family;
+         scale parameter(s) estimated by generalized cross-validation (GCV);
+         Matern smoothness parameter estimated by GCV
+=============================================
+Likelihood ratio test:
+Standard likelihood ratio profiles & LRT
+=============================================
+500 parameter points (first iteration)
+30 sampled tree(s) per locus 
+1 job(s) to run (multilocus sample(s) to analyse) on 1 processor(s)
+

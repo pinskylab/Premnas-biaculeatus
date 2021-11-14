@@ -1,0 +1,7 @@
+Genepop
+GenepopInputFile=PRBI_genepop_2009-11-12_comb12.gen.txt
+MenuOptions=6:2
+EstimationPloidy=Diploid
+RandomSeed=67144630
+Mode=Batch
+

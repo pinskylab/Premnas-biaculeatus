@@ -1,0 +1,55 @@
+Output from NeEstimator v2.1
+Starting time: Mon Jan 18 16:18:44 2021
+Input File: "PRBI_genepop_2009-11-12_1cohort_PopsExcluded.gen.txt"
+
+Number of Loci = 16
+
+LD mating model: Monogamy
+
+Population     1 [1]  (Number of Individuals = 130)
+****************
+--------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010         0+
+--------------------------------------------------------------------------
+
+LINKAGE DISEQUILIBRIUM METHOD
+
+Harmonic Mean Sample Size =      126.0       125.4       125.5       125.7
+Independent Comparisons =       1553        2913        3851        5786
+OverAll r^2 =                 0.008230    0.008260    0.008325    0.017682
+Expected r^2 Sample =         0.008127    0.008164    0.008158    0.008149
+Estimated Ne^ =                 6453.7      6942.1      3971.0        67.1
+
+95% CIs for Ne^
+* Parametric                     930.7      1238.3      1203.9        62.6
+                              Infinite    Infinite    Infinite        72.1
+
+* JackKnife on Samples           659.5       779.5       822.9        12.1
+                              Infinite    Infinite    Infinite       917.9
+
+
+HETEROZYGOTE EXCESS METHOD
+
+Harmonic Mean Sample Size =      128.3       128.3       128.3       128.3 
+Independent Alleles =             59          80          94         118  
+Weighted Mean D =             -0.06826    -0.06053    -0.07528    -0.04645
+Estimated Neb^  =             Infinite    Infinite    Infinite    Infinite
+
+95% CIs for Nb:
+* Parametric                  Infinite    Infinite    Infinite    Infinite
+                              Infinite    Infinite    Infinite    Infinite
+
+MOLECULAR COANCESTRY METHOD
+
+Harmonic Mean Sample Size =                                          128.3
+OverAll f1^    =                                                   0.27801
+Estimated Neb^ =                                                       1.8
+
+95% CIs for Ne^
+* Jackknife on Loci                                                    1.1
+                                                                       2.7
+**************************************************************************
+
+Ending time: Mon Jan 18 16:18:45 2021
+-------------------------------------
+
