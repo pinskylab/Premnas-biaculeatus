@@ -33,4 +33,5 @@ R_Code: R scripts used for data analysis under the RProject file "Premnas-biacul
      "PRBI_IBD_Analysis.R" calculations of pairwise Fst matrices, testing for Hardy-Weinberg, running Mantel tests to test for IBD patterns, plots of geographic vs. genetic distance
      "Potential_Connectivity.R" identifies release sites for each sampling site from Thompson et al. 2018, tests for correlations between potential connectivity and genetic differentiation
      "Census_Density_Estimates.R" calculates census density for the IBD study region and bootstraps estimates to generate 95% confidence intervals
-     "Estimate_Sigma" error propagation for estimates of density and IBD slope (m). Sources scripts from "Scripts for Sigma Estimates" folder. 
+     "Estimate_Sigma" error propagation for estimates of density and IBD slope (m). Sources scripts from "Scripts for Sigma Estimates" folder.
+     "other_study_dispersal_spreads" converts dispersal distances published for other coral reef species to dispersal spread for comparison purposes. Reported in the "Comparison to other coral reef species" section of the Discussion.
