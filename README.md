@@ -1,6 +1,6 @@
 # Premnas biaculeatus
  
-Data files and analysis for the manuscript "Isolation by distance and isolation by oceanography in Maroon Anemonefish (Premnas biaculeatus)" focused on estimating the larval dispersal kernels of Premnas biaculeatus using Isolation-by-Distance genetic estimates and comparing genetic differentiation to probability of dispersal based on oceanographic simulations.
+Data files and analysis for the manuscript "Isolation-by-distance and isolation-by-oceanography in Maroon Anemonefish (Premnas biaculeatus)" focused on estimating the larval dispersal kernels of Premnas biaculeatus using Isolation-by-Distance genetic estimates and comparing genetic differentiation to probability of dispersal based on oceanographic simulations.
 
 The repository is organized in the following folders:
 
