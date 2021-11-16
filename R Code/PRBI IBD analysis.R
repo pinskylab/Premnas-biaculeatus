@@ -30,6 +30,9 @@ prbi_11_12_fst <- prbi_11_12_fst[,-1]
 colnames(prbi_11_12_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
 rownames(prbi_11_12_fst) <- c(1, 2, 7, 8, 9, 10, 11, 13, 14, 15, 19, 22)
 
+#To get min and max pairwise Fst
+prbi_11_12_fst_short <- prbi_11_12_fst[c(-8, -9, -10, -12), c(-8, -9, -10, -12)]
+summary(prbi_11_12_fst_short)
 
 ##Linearize Fst and Plot Linear Fst vs. Geographic Distance
 
