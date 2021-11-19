@@ -191,7 +191,7 @@ pconnect_avg_comb12_no8_9_10_matrix <- pconnect_avg_comb12_matrix[c(-3, -4, -5),
 
 prbi_11_12_comb12_no8_9_10_fstlin <- prbi_11_12_comb12_fstlin[c(-3, -4, -5), c(-3, -4, -5)]
 
-mantel(pconnect_avg_comb12_no8_9_10_matrix, prbi_11_12_comb12_no8_9_10_fstlin)
+mantel(pconnect_avg_comb12_no8_9_10_matrix, prbi_11_12_comb12_no8_9_10_fstlin, permutations=999)
 #R: -0.6616, p: 0.91667, 23 permutations
 
 plot(pconnect_avg_comb12_no8_9_10_matrix, prbi_11_12_comb12_no8_9_10_fstlin, 
@@ -243,6 +243,7 @@ mantel.partial(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, w
 pconnect_avg_comb12_matrix[upper.tri(pconnect_avg_comb12_matrix, diag=T)] = NA
 prbi_11_12_comb12_fstlin[upper.tri(prbi_11_12_comb12_fstlin, diag=T)] = NA
 
+
 pconnectframe_comb12 <- tibble(PConnect=as.vector(pconnect_avg_comb12_no19_matrix), 
                         GeneticDistance=as.vector(prbi_11_12_comb12_no19_fstlin))
 pconnectframe_comb12 <- drop_na(pconnectframe_comb12)
@@ -250,6 +251,14 @@ pconnectframe_comb12 <- drop_na(pconnectframe_comb12)
 pop19_comb12 <- tibble(PConnect = as.vector(pconnect_avg_comb12_matrix[7,]),
                 GeneticDistance = as.vector(prbi_11_12_comb12_fstlin[7,]))
 pop19_comb12 <- drop_na(pop19_comb12)
+
+#Separate symbol for 8&9, 8&10, 9&10
+
+pop8910 <- tibble(PConnect= as.vector(c(pconnect_avg_comb12_matrix[4, 3], pconnect_avg_comb12_matrix[5, 3],
+                                        pconnect_avg_comb12_matrix[5, 4])),
+                  GeneticDistance= as.vector(c(prbi_11_12_comb12_fstlin[4, 3], prbi_11_12_comb12_fstlin[5, 3],
+                                               prbi_11_12_comb12_fstlin[5, 4])))
+
 
 ggplot(data=pconnectframe_comb12, aes(x=PConnect, 
                                              y=GeneticDistance)) +
@@ -267,9 +276,17 @@ ggplot(data=pconnectframe_comb12, aes(x=PConnect,
   geom_point(size=2.5) +
   geom_point(data=pop19_comb12, aes(x=PConnect, y=GeneticDistance), size=3, shape=1) +
   geom_smooth(data=pop19_comb12, method="lm", se=FALSE, color="black", linetype="dotted", size=1) +
+  geom_point(data=pop8910, aes(x=PConnect, y=GeneticDistance), size=3, shape=15) +
   theme_bw() +
   xlab("Potential Connectivity") +
-  ylab("Genetic Distance (Fst/(1-Fst)")
+  ylab("Genetic Distance (Fst/(1-Fst)") +
+  annotate("text", x = 0.038, y = -0.005, label = "8") +
+  annotate("text", x = 0.023, y = -0.0023, label = "7") +
+  annotate("text", x = 0.0062, y = 0.0023, label = "9") +
+  annotate("text", x = 0.0045, y = 0.011, label = "1&2") +
+  annotate("text", x = -0.0045, y = 0.0075, label = "10") +
+  annotate("text", x = 0.007, y = 0.009, label = "11") +
+  theme(axis.text = element_text(size = 10))
 
 
 ##Plot Pop 19 compared to other pops with pops 1 and 2 combined (release site 2480)##

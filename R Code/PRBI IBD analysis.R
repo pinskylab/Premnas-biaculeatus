@@ -122,7 +122,8 @@ ggplot(data=distanceframe, aes(x=distanceframe$WaterDistance,
     geom_smooth(method="lm", color="black") +
     theme_bw() +
     xlab("Geographic Distance (km)") +
-    ylab("Genetic Distance (Fst/(1-Fst)")
+    ylab("Genetic Distance (Fst/(1-Fst)") +
+    theme(axis.text = element_text(size = 10)) 
 
 
 
