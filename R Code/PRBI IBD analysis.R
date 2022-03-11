@@ -67,6 +67,11 @@ prbi_11_12_EW_fstlin <- prbi_11_12_fstlin[c(-8, -9, -10, -12), c(-8, -9, -10, -1
 mantel(water_distance, prbi_11_12_EW_fstlin)
 #r: 0.1469, p: 0.261, 999 permutations 
 
+#Get 95% CI
+cor.test(water_distance[lower.tri(water_distance)], 
+         prbi_11_12_EW_fstlin[lower.tri(prbi_11_12_EW_fstlin)])
+#-0.239 - 0.493
+
 #Linear regression with over water distance
 y <- as.numeric(prbi_11_12_EW_fstlin)
 x <- as.numeric(water_distance)
@@ -89,6 +94,11 @@ water_distance_no19 <- water_distance[-8, -8]
 #Mantel test with over water distance
 mantel(water_distance_no19, prbi_11_12_EW_no19_fstlin)
 #r: 0.4563, p: 0.03, 5039 permutations 
+
+#Get 95% CI
+cor.test(water_distance_no19[lower.tri(water_distance_no19)], 
+         prbi_11_12_EW_no19_fstlin[lower.tri(prbi_11_12_EW_no19_fstlin)])
+#0.031 - 0.742
 
 #Linear regression with over water distance
 y <- as.numeric(prbi_11_12_EW_no19_fstlin)

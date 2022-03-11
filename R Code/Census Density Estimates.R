@@ -56,7 +56,7 @@ hist(IBD_dens$densPRBI) #doesn't look normal
 IBD_mean <- mean(IBD_dens$densPRBI) #0.0003527602
 IBD_se <- sd(IBD_dens$densPRBI) / sqrt(length(IBD_dens$densPRBI)) #8.297625e-05
 
-IBD_mean *1000000 * 193 / 130 #524 fish/km
+IBD_mean *1000000 * 648 / 130 #1758.374 fish/km
 
 
 ##Bootstrapping of IBD density estimates
@@ -76,11 +76,11 @@ plot(b)
 
 boot.ci(boot.out=b, type="bca") #95% CI 0.0002 - 0.0005
 
-#Convert to square km, then multiply CI by reef area (300km^2) and divide by reef length (130 km)
+#Convert to square km, then multiply CI by reef area (648km^2) and divide by reef length (130 km)
 
-IBD_lowerCI <- 0.0002 * 1000000 * 193 / 130 #296.9231 fish/km
+IBD_lowerCI <- 0.0002 * 1000000 * 648 / 130 #996.9231 fish/km
 
-IBD_upperCI <- 0.0005 * 1000000 * 193 / 130 #742.3077 fish/km
+IBD_upperCI <- 0.0005 * 1000000 * 648 / 130 #2492.308 fish/km
 
 
 #Density estimate for Cebu (Bohol pops 1 and 2 excluded)

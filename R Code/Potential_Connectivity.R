@@ -148,6 +148,11 @@ library(vegan)
 mantel(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin) 
 #Mantel statistic r: -0.4417, p-value: 0.975, 5039 permutations
 
+#Get 95% CI
+cor.test(pconnect_avg_comb12_matrix[lower.tri(pconnect_avg_comb12_matrix)], 
+         prbi_11_12_comb12_fstlin[lower.tri(prbi_11_12_comb12_fstlin)])
+#-0.734 - -0.012
+
 plot(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin, 
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
      pch=20)
@@ -180,12 +185,16 @@ rownames(water_distance_comb12) <- c(1, 7, 8, 9, 10, 11, 19)
 #Make matrix symmetrical
 upperTriangle(water_distance_comb12) <- lowerTriangle(water_distance_comb12, byrow=TRUE)
 
-#Run Partial Mantel test
+#Run Partial Mantel test with geographic distance as control
 mantel.partial(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin, water_distance_comb12)
 #Mantel statistic r: -0.4151, p-value: 0.963, 5039 permutations
 
-#Mantel test excluding pops 8, 9, 10
+#Run Partial Mantel test with pconnect as control
+mantel.partial(water_distance_comb12, prbi_11_12_comb12_fstlin, pconnect_avg_comb12_matrix)
+#Mantel statistic r: -0.06837, p-value: 0.591, 5039 permutations
 
+
+#Mantel test excluding pops 8, 9, 10
 
 pconnect_avg_comb12_no8_9_10_matrix <- pconnect_avg_comb12_matrix[c(-3, -4, -5), c(-3, -4, -5)]
 
@@ -193,6 +202,11 @@ prbi_11_12_comb12_no8_9_10_fstlin <- prbi_11_12_comb12_fstlin[c(-3, -4, -5), c(-
 
 mantel(pconnect_avg_comb12_no8_9_10_matrix, prbi_11_12_comb12_no8_9_10_fstlin, permutations=999)
 #R: -0.6616, p: 0.91667, 23 permutations
+
+#Get 95% CI
+cor.test(pconnect_avg_comb12_no8_9_10_matrix[lower.tri(pconnect_avg_comb12_no8_9_10_matrix)], 
+         prbi_11_12_comb12_no8_9_10_fstlin[lower.tri(prbi_11_12_comb12_no8_9_10_fstlin)])
+#-0.959 - 0.324
 
 plot(pconnect_avg_comb12_no8_9_10_matrix, prbi_11_12_comb12_no8_9_10_fstlin, 
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
@@ -209,6 +223,10 @@ prbi_11_12_comb12_no19_fstlin <- prbi_11_12_comb12_fstlin[-7, -7]
 
 mantel(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin) 
 #Mantel statistic r: -0.3366, p-value: 0.81667, 719 permutations
+
+cor.test(pconnect_avg_comb12_no19_matrix[lower.tri(pconnect_avg_comb12_no19_matrix)], 
+         prbi_11_12_comb12_no19_fstlin[lower.tri(prbi_11_12_comb12_no19_fstlin)])
+#-0.724 - 0.212
 
 plot(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, 
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 
@@ -229,7 +247,7 @@ plot(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin,
      pch=20)
 abline(mod_pconnect_comb12_no19_matrix, col="red")
 
-#Partial Mantel test
+#Partial Mantel test controlling for geographic distance
 
 water_distance_comb12_no19 <- water_distance_comb12[-7, -7]
 
@@ -237,6 +255,10 @@ mantel.partial(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, w
 
 #Mantel statistic r: -0.01532, p-value: 0.52361, 719 permutations
 
+#Partial Mantel controlling for pconnect
+
+mantel.partial(water_distance_comb12_no19, prbi_11_12_comb12_no19_fstlin, pconnect_avg_comb12_no19_matrix)
+#Mantel statistic r: 0.4026, p-value: 0.098611, 719 permutations
 
 #Plot showing 19 in different color
 
@@ -329,7 +351,7 @@ pconnect_avg_comb12_df
 
 #Plotting average pconnect vs. lin Fst
 mod_pconnect_comb12_avg <- lm(pconnect_avg_comb12_df$pop19_comb12_linfst ~ pconnect_avg_comb12_df$pconnect_avg_comb12)
-summary(mod_pconnect_comb12_avg) #Adjusted R-squared:0.900235922, p:0.0
+summary(mod_pconnect_comb12_avg) #Adjusted R-squared:0.900235922, p:0.0024
 
 mantel(pconnect_avg_comb12_df$pconnect_avg_comb12, pconnect_avg_comb12_df$pop19_comb12_linfst)
 
@@ -350,5 +372,18 @@ ggplot(data=pconnect_avg_comb12_df, aes(x=pconnect_avg_comb12,
   xlab("PConnect") +
   ylab("Fst/(1-Fst)")
 
+
+#Dispersal spread estimate using equation from Siegel et al. 2003
+
+#standard deviation of current velocity in IBD region: 0.2004 m/s, need to convert to km/day
+
+sd_currentvel <- (0.2004 * 86400) / 1000 #17.31456 km/day
+
+
+pconnect_spread <- 2.238 * sd_currentvel * 10^0.5 #122.5382
+
+(2.238 * sd_currentvel * 10)^0.5
+
+#But if the power to 0.5 is applied after, answer is 19.685 km
 
 
