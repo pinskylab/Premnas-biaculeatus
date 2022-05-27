@@ -227,6 +227,7 @@ mantel(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin)
 cor.test(pconnect_avg_comb12_no19_matrix[lower.tri(pconnect_avg_comb12_no19_matrix)], 
          prbi_11_12_comb12_no19_fstlin[lower.tri(prbi_11_12_comb12_no19_fstlin)])
 #-0.724 - 0.212
+(-0.724 - 0.212) / 3.92 #-0.239
 
 plot(pconnect_avg_comb12_no19_matrix, prbi_11_12_comb12_no19_fstlin, 
      xlab="Probability of Larval Dispersal between Populations", ylab="Fst/(1-Fst)", 

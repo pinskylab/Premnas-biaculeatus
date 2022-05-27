@@ -35,6 +35,21 @@ summarizeSigmas(sigmas=s1$sigmas, sg=3) # report distribution for sigma
 
 #Point value for sigma: 8.891716, mean: 8.55, median: 7.92, SD: 4.79, Lower 95% CI: 2.3, Upper 95% CI: 18.4
 
+#Calculate number of bootstrap values above 11km (A.clarkii dispersal spread estimate)
+s1_df <- as.data.frame(s1)
+s1_11 <- subset(s1_df, s1_df$sigmas>11)
+s1_11
+length(s1_11$sigmas) #234,583 out of 1,000,000 iterations are greater than 11 km
+summary(s1_11)
+234583/1000000 #0.2346
+
+#Calculate number of bootstrap values above 17km (A. percula dispersal spread estimate)
+s1_17 <- subset(s1_df, s1_df$sigmas>17)
+s1_17
+length(s1_17$sigmas) #37,857 out of 1,000,000 iterations are greater than 17 km
+summary(s1_17)
+37857/1000000 #0.037857
+
 ###########################################################
 
 #Estimating adult lifespan (AL) and age at maturity (alpha)
