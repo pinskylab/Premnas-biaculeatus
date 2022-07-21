@@ -16,7 +16,7 @@ The repository is organized in the following folders:
   
 - Data: data files that have been formatted or manipulated by authors, in addition to output files from running Genepop functions in RStudio. Contains 3 subfolders:
   - Coordinates_Distances: files with the distances between sampling sites and the coordinates of the sampling sites. 
-  - "OverWater_Comb12_Distance.csv" matrix of pairwise over-water distance (measured in Google Earth as the distance between two sampling sites that does not cross land), with sites 1 and 2 combined due to only one particle release site corresponding to both sites. Used in "Potential_Connectivity.R" script
+  -  "OverWater_Comb12_Distance.csv" matrix of pairwise over-water distance (measured in Google Earth as the distance between two sampling sites that does not cross land), with sites 1 and 2 combined due to only one particle release site corresponding to both sites. Used in "Potential_Connectivity.R" script
    - "OverWater_Distance.csv" matrix of pairwise over-water distance (measured in Google Earth as the distance between two sampling sites that does not cross land), used in "PRBI_IBD_Analysis.R" and "Potential_Connectivity.R" scripts
    - "PRBI_AvgLatLong.csv" and "PRBI_Comb12_AvgLatLong" gives average latitude and longitude for individuals found at each sampling site, "PRBI_Comb12_AvgLatLong" combines populations 1 and 2 as run in the potential connectivity analyses.
 - Fst_Matrices: Copies of Genepop pairwise Fst outputs in a .csv matrix format that can be loaded in RStudio. "2009-11-12 All Pop All Loci" pairwise Fst of all populations at all 16 loci. "2009-11-12_comb12_FstMatrix" pairwise Fst with populations 1 and 2 combined for potential connectivity analyses. 
