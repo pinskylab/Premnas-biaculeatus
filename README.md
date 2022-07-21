@@ -13,6 +13,7 @@ The repository is organized in the following folders:
   - "PRBI_GenAlEx_2009-11-12.csv" genotypes for all Amphiprion biaculeatus individuals at 16 microsatellite loci in GenAlEx format.
   - "PRBI_genepop_2009_11-12.gen.txt" genotypes for all Amphiprion biaculeatus individuals at 16 microsatellite loci in Genepop format. Used as the input file for Fst                    calculations.
   - "surveys2009-09-23.density.csv" number of anemonefish, including Amphiprion biaculeatus, found at sampling sites in the central Philippines. Used for census density calculations.
+  
 - Data: data files that have been formatted or manipulated by authors, in addition to output files from running Genepop functions in RStudio. Contains 3 subfolders:
   - Coordinates_Distances: files with the distances between sampling sites and the coordinates of the sampling sites. 
   - "OverWater_Comb12_Distance.csv" matrix of pairwise over-water distance (measured in Google Earth as the distance between two sampling sites that does not cross land), with sites 1 and 2 combined due to only one particle release site corresponding to both sites. Used in "Potential_Connectivity.R" script
@@ -22,6 +23,7 @@ The repository is organized in the following folders:
 - Genepop_Outputs: Outputs of Genepop pairwise Fst and Hardy-Weinberg functions. See "PRBI_IBD_Analysis.R" script for corresponding input files and code.
   - Ne_Estimator: Inputs and output files from running NeEstimator (Do et al. 2014) for all sites in the IBD study region grouped together as 1 cohort with a pcrit of 0.02 and a monogamous mating model. "PRBI_genpop_1cohort_PopsExcluded.gen.txt" is the input file. "PRBI_genpop_1cohort_PopsExcluded.genNe.txt" gives the output Nb (Number of breeders) estimates and "PRBI_genpop_1cohort_PopsExcluded.genNoDat.txt" gives a summary of any loci with no data for any individuals.
   - "PRBI_genepop_2009-11-12_comb12.gen.txt" genotypes for all Amphiprion biaculeatus individuals at 16 microsatellite loci in Genepop format. All individuals previously in sites 1 and 2 are combined into one population. Used as the input file for Fst calculations for the potential connectivity analyses.
+  
 - R_Code: R scripts used for data analysis under the RProject file "Premnas-biaculeatus.RProj". All code was run in R Studio version 1.4.1106 using R version 4.0.5 (R Core Team, 2021).
   - "PRBI_IBD_Analysis.R" calculations of pairwise Fst matrices, testing for Hardy-Weinberg, running Mantel tests to test for IBD patterns, plots of geographic vs. genetic distance. Pairwise Fst and Hardy-Weinberg calculations were conducted using the Genepop package version 1.1.7. Mantel tests were calculated using the vegan package version 2.5-7.
   - "Potential_Connectivity.R" identifies release sites for each sampling site from Thompson et al. 2018, tests for correlations between potential connectivity and genetic differentiation
