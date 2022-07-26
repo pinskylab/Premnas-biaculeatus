@@ -102,8 +102,6 @@ Cebu_mean *1000000 * 68 / 110 #217 fish/km
 
 ##Bootstrapping of Cebu density estimates
 
-library(boot)
-
 x = as.vector(Cebu_dens$densPRBI)
 
 samplemean <- function(x, d) {

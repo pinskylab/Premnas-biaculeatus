@@ -1,9 +1,11 @@
 ## Potential Connectivity Matrices
 #From Diane Thompson- for 10-day PLD
 
+library(tidyverse) #version 1.3.0
+
 ##Loading in matrices from "Downloaded_Data" folder
 
-library(ncdf4)
+library(ncdf4) #version 1.17
 connect_matrix <- nc_open("CORAL-connect_25_historical_pconnect_10-day_noedges2.nc")
 print(connect_matrix)  #This gives the meta-data for the matrix
 #[dst_site, src_site] - dst=destination site, src=source site
@@ -53,7 +55,7 @@ pos_lon <- fun.zero.omit(pos_lon)
 pos_lon <- sort(pos_lon)
 pos_lon <- table(pos_lon)
 
-library(GLDEX)
+library(GLDEX) #version 2.0.0.7
 pos_coord <- fun.zero.omit(pos_coord) #omits zeros from the vector
 pos_coord <- sort(pos_coord) #orders from least to greatest
 pos_coord <- table(pos_coord) #gives frequency table, so each release site is only listed once
@@ -120,7 +122,7 @@ rownames(pconnect_avg_matrix) <- c(1, 2, 7, 8, 9, 10, 11, 19)
 
 #Flip values across diagonal, so they are in the lower triangle of the matrix
 
-library(gdata)
+library(gdata) #version 2.18.0
 lowerTriangle(pconnect_avg_matrix) <- upperTriangle(pconnect_avg_matrix, byrow=TRUE)
 
 
@@ -144,7 +146,7 @@ upperTriangle(prbi_11_12_comb12_fstlin) <- lowerTriangle(prbi_11_12_comb12_fstli
 
 #Mantel test between average pconnect and linearized Fst 
 
-library(vegan)
+library(vegan) #version 2.5-7
 mantel(pconnect_avg_comb12_matrix, prbi_11_12_comb12_fstlin) 
 #Mantel statistic r: -0.4417, p-value: 0.975, 5039 permutations
 

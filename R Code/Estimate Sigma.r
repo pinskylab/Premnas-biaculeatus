@@ -58,7 +58,7 @@ summary(s1_17)
 
 library(devtools)
 devtools::install_github("james-thorson/FishLife")
-library(FishLife)
+library(FishLife) #version 2.0.0
 
 vignette("tutorial", "FishLife")
 

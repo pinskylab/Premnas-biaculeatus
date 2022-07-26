@@ -1,8 +1,7 @@
 #Premnas biaculeatus Genotypes and Analysis
 
-library(genepop)
-library(geodist)
-library(tidyverse)
+library(genepop) #version 1.1.7
+library(tidyverse) #version 1.3.0
 
 ##Calculate pairwise Fst between populations, input file from "Downloaded_Data" folder
 #pairs=TRUE to get a pairwise Fst matrix
@@ -55,7 +54,7 @@ rownames(water_distance) <- c(1, 2, 7, 8, 9, 10, 11, 19)
 #Make matrix symmetrical
 upperTriangle(water_distance) <- lowerTriangle(water_distance, byrow=TRUE)
 
-library(vegan)
+library(vegan) #version 2.5-7
 
 #2009-11-12 data without populations 13, 14, 15, 22 (East-West transect)
 #Pops 13, 14, 15, and 22 were excluded due to all having a sample size less than 5 individuals
