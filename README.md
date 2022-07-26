@@ -1,6 +1,6 @@
 # Isolation-by-distance and isolation-by-oceanography in Maroon Anemonefish (Amphiprion biaculeatus)
  
-Data files and analysis for the manuscript "Isolation-by-distance and isolation-by-oceanography in Maroon Anemonefish (Amphiprion biaculeatus)" focused on estimating the larval dispersal kernels of Amphiprion biaculeatus (formerly named Premnas biaculeatus) using Isolation-by-Distance genetic estimates and comparing genetic differentiation to probability of dispersal based on oceanographic simulations.
+Data files and analysis for the manuscript "Isolation-by-distance and isolation-by-oceanography in Maroon Anemonefish (Amphiprion biaculeatus)" (DOI: 10.1111/eva.13448) focused on estimating the larval dispersal kernels of Amphiprion biaculeatus (formerly named Premnas biaculeatus) using Isolation-by-Distance genetic estimates and comparing genetic differentiation to probability of dispersal based on oceanographic simulations.
 
 Note: the species was classified as Premnas biaculeatus when analyses were run and the original manuscript were drafted. The authors noted that the species was re-classified into the genus Amphiprion during the revision process. Objects in the R code may still be named according to the genus Premnas (using the species shorthand PRBI).
 
