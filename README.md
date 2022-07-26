@@ -14,7 +14,7 @@ The repository is organized in the following folders:
   - "PRBI_genepop_2009_11-12.gen.txt" genotypes for all *Amphiprion biaculeatus* individuals at 16 microsatellite loci in Genepop format. Used as the input file for Fst                    calculations.
   - "surveys2009-09-23.density.csv" number of anemonefish, including *Amphiprion biaculeatus*, found at sampling sites in the central Philippines. Used for census density calculations.
   
-- Data: data files that have been formatted or manipulated by authors, in addition to output files from running Genepop functions in RStudio. Contains 3 subfolders:
+- Data: data files that have been formatted or manipulated by authors, in addition to output files from running Genepop functions in RStudio.
   -Coordinates_Distances: files with the distances between sampling sites and the coordinates of the sampling sites. 
    - "OverWater_Comb12_Distance.csv" matrix of pairwise over-water distance (measured in Google Earth as the distance between two sampling sites that does not cross land), with sites 1 and 2 combined due to only one particle release site corresponding to both sites. Used in "Potential_Connectivity.R" script
     - "OverWater_Distance.csv" matrix of pairwise over-water distance (measured in Google Earth as the distance between two sampling sites that does not cross land), used in "PRBI_IBD_Analysis.R" and "Potential_Connectivity.R" scripts
