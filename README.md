@@ -1,8 +1,8 @@
-# Premnas biaculeatus
+# Isolation-by-distance and isolation-by-oceanography in Maroon Anemonefish (Amphiprion biaculeatus)
  
 Data files and analysis for the manuscript "Isolation-by-distance and isolation-by-oceanography in Maroon Anemonefish (Amphiprion biaculeatus)" focused on estimating the larval dispersal kernels of Amphiprion biaculeatus (formerly named Premnas biaculeatus) using Isolation-by-Distance genetic estimates and comparing genetic differentiation to probability of dispersal based on oceanographic simulations.
 
-Note: the species was classified as Premnas biaculeatus when analyses and the original manuscript were drafted. The authors noted that the species was re-classified into the genus Amphiprion during the revision process. Objects in the R code may still be named according to the genus Premnas (using the species shorthand PRBI).
+Note: the species was classified as Premnas biaculeatus when analyses were run and the original manuscript were drafted. The authors noted that the species was re-classified into the genus Amphiprion during the revision process. Objects in the R code may still be named according to the genus Premnas (using the species shorthand PRBI).
 
 The repository is organized in the following folders:
 
@@ -26,7 +26,7 @@ The repository is organized in the following folders:
   
 - R_Code: R scripts used for data analysis under the RProject file "Premnas-biaculeatus.RProj". All code was run in R Studio version 1.4.1106 using R version 4.0.5 (R Core Team, 2021).
   - "PRBI_IBD_Analysis.R" calculations of pairwise Fst matrices, testing for Hardy-Weinberg, running Mantel tests to test for IBD patterns, plots of geographic vs. genetic distance. Pairwise Fst and Hardy-Weinberg calculations were conducted using the Genepop package version 1.1.7. Mantel tests were calculated using the vegan package version 2.5-7.
-  - "Potential_Connectivity.R" identifies release sites for each sampling site from Thompson et al. 2018, tests for correlations between potential connectivity and genetic differentiation
-  - "Census_Density_Estimates.R" calculates census density for the IBD study region and bootstraps estimates to generate 95% confidence intervals
-  - "Estimate_Sigma" error propagation for estimates of density and IBD slope (m). Sources scripts from "Scripts for Sigma Estimates" folder.
+  - "Potential_Connectivity.R" identifies release sites for each sampling site from Thompson et al. 2018, tests for correlations between potential connectivity and genetic differentiation. Uses the following packages: tidyverse version 1.3.0, ncdf4 version 1.17, GLDEX version 2.0.0.7, gdata version 2.18.0, and vegan version 2.5-7. 
+  - "Census_Density_Estimates.R" calculates census density for the IBD study region and bootstraps estimates to generate 95% confidence intervals. Uses the following packages: tidyverse version 1.3.0 and boot version 1.3-28.
+  - "Estimate_Sigma" error propagation for estimates of density and IBD slope (m). Sources scripts from "Scripts for Sigma Estimates" folder. Uses FishLife package version 2.0.0.
   - "other_study_dispersal_spreads" converts dispersal distances published for other coral reef species to dispersal spread for comparison purposes. Reported in the "Comparison to other coral reef species" section of the Discussion.
